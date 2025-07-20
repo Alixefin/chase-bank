@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -17,13 +18,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const getTitleFromPathname = (pathname: string) => {
-  if (pathname === '/dashboard') return 'Accounts';
+  if (pathname === '/dashboard') return 'Dashboard';
   if (pathname.startsWith('/dashboard/accounts')) return 'Account Details';
-  if (pathname.startsWith('/dashboard/transfer')) return 'Payments & Transfers';
-  if (pathname.startsWith('/dashboard/cards')) return 'Card Management';
-  if (pathname.startsWith('/dashboard/loans')) return 'Loans & Mortgages';
-  if (pathname.startsWith('/dashboard/investing')) return 'Investing';
-  if (pathname.startsWith('/dashboard/support')) return 'Support';
+  if (pathname.startsWith('/dashboard/transfer')) return 'Transactions';
+  if (pathname.startsWith('/dashboard/cards')) return 'Credit Cards';
+  if (pathname.startsWith('/dashboard/statements')) return 'Statements';
+  if (pathname.startsWith('/dashboard/rewards')) return 'Rewards & Deals';
+  if (pathname.startsWith('/dashboard/notifications')) return 'Notifications';
   if (pathname.startsWith('/dashboard/profile')) return 'User Profile';
   return 'SecureBank';
 };
@@ -37,11 +38,11 @@ export function DashboardHeader() {
   const userInitial = user?.name?.charAt(0).toUpperCase() || "U";
 
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+    <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-transparent px-4 md:px-6">
       <div className="md:hidden">
         <SidebarTrigger />
       </div>
-      <h1 className="flex-1 text-lg font-semibold md:text-2xl">{title}</h1>
+      <h1 className="flex-1 text-2xl font-bold text-gray-800">{title}</h1>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">
@@ -78,3 +79,5 @@ export function DashboardHeader() {
     </header>
   );
 }
+
+    
