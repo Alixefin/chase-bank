@@ -363,7 +363,7 @@ const MobileDashboard = ({ user, accounts }: UserProps) => {
                             <Image src="https://placehold.co/24x24.png" width={24} height={24} alt="snapshot icon" data-ai-hint="money cash"/>
                         </div>
                         <div>
-                            <p className="font-bold">Snapshot <Badge variant="secondary" className="ml-1 text-xs">30 sec read</Badge></p>
+                            <div className="font-bold">Snapshot <Badge variant="secondary" className="ml-1 text-xs">30 sec read</Badge></div>
                             <p className="text-sm text-muted-foreground">Your money in this month is $750.</p>
                         </div>
                     </div>
