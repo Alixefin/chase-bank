@@ -97,9 +97,6 @@ interface DashboardProps {
 }
 
 const MyCards = ({ user, accounts }: { user: User | null, accounts: Account[] }) => {
-    const checkingAccount = accounts.find(a => a.name === 'Checking');
-    const savingsAccount = accounts.find(a => a.name === 'Savings');
-    
     return (
     <Card className="bg-card">
         <CardHeader className="flex flex-row items-center justify-between">
@@ -109,13 +106,15 @@ const MyCards = ({ user, accounts }: { user: User | null, accounts: Account[] })
         <CardContent>
             <Carousel opts={{ align: "start", loop: false }} className="w-full">
                 <CarouselContent>
-                    {checkingAccount && (
-                    <CarouselItem className="basis-full md:basis-1/2">
+                    <CarouselItem>
                         <div className="p-1">
                            <div className="relative aspect-[1.58] bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl p-6 text-white flex flex-col justify-between">
-                                <div>
-                                    <span className="text-sm opacity-80">Balance</span>
-                                    <p className="text-2xl font-bold">{formatCurrency(checkingAccount.balance)}</p>
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <span className="text-sm opacity-80">Balance</span>
+                                        <p className="text-2xl font-bold">{formatCurrency(5000)}</p>
+                                    </div>
+                                    <span className="font-bold text-lg">Credit</span>
                                 </div>
                                 <div className="space-y-1">
                                     <p className="font-mono text-lg tracking-widest">···· ···· ···· 4562</p>
@@ -131,36 +130,9 @@ const MyCards = ({ user, accounts }: { user: User | null, accounts: Account[] })
                                         <Image src="/img/visa-logo.png" alt="Visa Logo" width={40} height={20} data-ai-hint="logo" />
                                     </div>
                                 </div>
-                               <div className="absolute top-6 right-6 text-2xl font-bold -rotate-90 origin-bottom-left">Debit</div>
                             </div>
                         </div>
                     </CarouselItem>
-                    )}
-                    {savingsAccount && (
-                    <CarouselItem className="basis-full md:basis-1/2">
-                       <div className="p-1">
-                           <div className="relative aspect-[1.58] bg-gradient-to-br from-teal-400 to-green-500 rounded-xl p-6 text-white flex flex-col justify-between">
-                                <div>
-                                    <span className="text-sm opacity-80">Balance</span>
-                                    <p className="text-2xl font-bold">{formatCurrency(savingsAccount.balance)}</p>
-                                </div>
-                                <div className="space-y-1">
-                                    <p className="font-mono text-lg tracking-widest">···· ···· ···· 7784</p>
-                                    <div className="flex justify-between items-end text-sm">
-                                       <div>
-                                            <span className="opacity-80 block text-xs">Account Holder</span>
-                                            {user?.firstName} {user?.lastName}
-                                        </div>
-                                        <div>
-                                            <span className="opacity-80 block text-xs">Account Type</span>
-                                            Savings
-                                        </div>
-                                   </div>
-                                </div>
-                            </div>
-                        </div>
-                    </CarouselItem>
-                    )}
                 </CarouselContent>
                 <div className="hidden md:block">
                   <CarouselPrevious className="absolute -left-4 top-1/2 -translate-y-1/2" />
@@ -482,3 +454,6 @@ const QuickActionButton = ({ icon: Icon, label, isText = false, href, onClick }:
         </Link>
     )
 }
+
+
+    
