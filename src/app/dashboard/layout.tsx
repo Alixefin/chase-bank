@@ -96,7 +96,10 @@ const MobileHeader = ({ user, logout }: { user: User | null; logout: () => void;
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <button>
-                        <CircleUserRound className="text-muted-foreground" />
+                        <Avatar className="h-8 w-8">
+                            <AvatarImage src="/img/user-avatar.png" alt="User avatar" />
+                            <AvatarFallback>{user?.firstName?.charAt(0)}</AvatarFallback>
+                        </Avatar>
                     </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end" forceMount>
@@ -229,7 +232,7 @@ export default function DashboardLayout({
                 <DropdownMenuTrigger asChild>
                     <div className="flex items-center gap-3 cursor-pointer">
                         <Avatar className="h-10 w-10">
-                            <AvatarImage src={`https://placehold.co/40x40.png`} alt={`${user.firstName} ${user.lastName}`} data-ai-hint="person" />
+                            <AvatarImage src="/img/user-avatar.png" alt={`${user.firstName} ${user.lastName}`} />
                             <AvatarFallback>{userInitial}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1 group-data-[collapsible=icon]:hidden">

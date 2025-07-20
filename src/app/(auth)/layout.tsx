@@ -1,75 +1,83 @@
-import { Logo } from "@/components/logo";
-import { Facebook, Instagram, Linkedin, Twitter, Youtube, Home } from "lucide-react";
-import Image from "next/image";
+"use client";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
-export default function AuthLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const formSchema = z.object({
+  email: z.string().email({ message: "Invalid email address." }),
+});
+
+export default function ForgotPasswordPage() {
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    toast({
+      title: "Password Reset Email Sent",
+      description: `If an account exists for ${values.email}, you will receive an email with reset instructions.`,
+    });
+    router.push("/login");
+  }
+
   return (
-    <div className="relative min-h-screen w-full flex flex-col">
-      <div className="absolute inset-0 bg-white z-0" />
-      <div className="absolute inset-0 z-10">
-          <Image
-            src="https://placehold.co/1920x1080.png"
-            alt="Abstract blue background"
-            layout="fill"
-            objectFit="cover"
-            className="opacity-10"
-            data-ai-hint="blue abstract"
-          />
-      </div>
+    <Card className="w-full max-w-sm bg-white/95 backdrop-blur-sm">
+      <CardHeader>
+        <CardTitle className="text-2xl">Forgot Password</CardTitle>
+        <CardDescription>
+          Enter your email and we&apos;ll send you a link to reset your password.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
 
-      <main className="relative z-20 flex flex-grow w-full flex-col items-center justify-center p-4">
-        <div className="flex items-center gap-2 mb-8">
-          <Logo className="h-12 w-12 text-primary" />
+                  <FormControl>
+                    <Input placeholder="name@example.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
+              Send Reset Link
+            </Button>
+          </form>
+        </Form>
+        <div className="mt-4 text-center text-sm">
+          Remembered your password?{" "}
+          <Link href="/login" className="text-primary hover:underline">
+            Login
+          </Link>
         </div>
-        {children}
-      </main>
-
-      <footer className="relative z-20 w-full bg-white py-8 px-4 text-xs text-gray-600">
-        <div className="container mx-auto">
-          <div className="flex justify-center items-center gap-4 mb-4">
-            <span>Follow us:</span>
-            <Facebook className="h-5 w-5 cursor-pointer hover:opacity-80" />
-            <Instagram className="h-5 w-5 cursor-pointer hover:opacity-80" />
-            <Twitter className="h-5 w-5 cursor-pointer hover:opacity-80" />
-            <Youtube className="h-5 w-5 cursor-pointer hover:opacity-80" />
-            <Linkedin className="h-5 w-5 cursor-pointer hover:opacity-80" />
-          </div>
-
-          <hr className="mb-4" />
-
-          <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 mb-4 text-center">
-            <Link href="#" className="hover:underline">Contact us</Link>
-            <Link href="#" className="hover:underline">Privacy</Link>
-            <Link href="#" className="hover:underline">Security</Link>
-            <Link href="#" className="hover:underline">Terms of use</Link>
-            <Link href="#" className="hover:underline">Accessibility</Link>
-            <Link href="#" className="hover:underline">SAFE Act: Chase Mortgage Loan Originators</Link>
-            <Link href="#" className="hover:underline">Fair Lending</Link>
-            <Link href="#" className="hover:underline">About Chase</Link>
-            <Link href="#" className="hover:underline">J.P. Morgan</Link>
-            <Link href="#" className="hover:underline">JPMorgan Chase & Co.</Link>
-            <Link href="#" className="hover:underline">Careers</Link>
-            <Link href="#" className="hover:underline">Español</Link>
-          </div>
-
-          <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 mb-6">
-            <Link href="#" className="hover:underline">Chase Canada</Link>
-            <Link href="#" className="hover:underline">Site map</Link>
-            <span>Member FDIC</span>
-            <div className="flex items-center gap-1">
-              <Home className="h-4 w-4" />
-              <span>Equal Housing Opportunity</span>
-            </div>
-          </div>
-          
-          <p className="text-center text-gray-500">(c) 2025 JPMorgan Chase & Co.</p>
-        </div>
-      </footer>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

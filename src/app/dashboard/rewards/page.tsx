@@ -6,12 +6,12 @@ import { Gift, Percent, PlusCircle, Star } from "lucide-react";
 import Image from "next/image";
 
 const offers = [
-    { id: 1, merchant: 'Starbucks', deal: '10% cash back', logo: 'https://placehold.co/100x100/png', hint: 'logo coffee' },
-    { id: 2, merchant: 'Walmart', deal: '5% cash back on groceries', logo: 'https://placehold.co/100x100/png', hint: 'logo retail' },
-    { id: 3, merchant: 'Amazon.com', deal: 'Earn 3x points', logo: 'https://placehold.co/100x100/png', hint: 'logo online store' },
-    { id: 4, merchant: 'BP', deal: '$0.10 off per gallon', logo: 'https://placehold.co/100x100/png', hint: 'logo gas station' },
-    { id: 5, merchant: 'Best Buy', deal: '5% back on electronics', logo: 'https://placehold.co/100x100/png', hint: 'logo electronics' },
-    { id: 6, merchant: 'Home Depot', deal: '10% off your purchase of $100+', logo: 'https://placehold.co/100x100/png', hint: 'logo hardware' },
+    { id: 1, merchant: 'Starbucks', deal: '10% cash back', logo: '/img/starbucks-logo.png' },
+    { id: 2, merchant: 'Walmart', deal: '5% cash back on groceries', logo: '/img/walmart-logo.png' },
+    { id: 3, merchant: 'Amazon.com', deal: 'Earn 3x points', logo: '/img/amazon-logo.png' },
+    { id: 4, merchant: 'BP', deal: '$0.10 off per gallon', logo: '/img/bp-logo.png' },
+    { id: 5, merchant: 'Best Buy', deal: '5% back on electronics', logo: '/img/bestbuy-logo.png' },
+    { id: 6, merchant: 'Home Depot', deal: '10% off your purchase of $100+', logo: '/img/homedepot-logo.png' },
 ];
 
 export default function RewardsPage() {
@@ -47,8 +47,7 @@ export default function RewardsPage() {
                             alt={`${offer.merchant} logo`} 
                             width={300} 
                             height={150} 
-                            className="w-full h-32 object-cover" 
-                            data-ai-hint={offer.hint}
+                            className="w-full h-32 object-cover"
                         />
                     </CardHeader>
                     <CardContent className="p-4">

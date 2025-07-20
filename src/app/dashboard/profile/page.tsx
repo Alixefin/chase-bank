@@ -22,7 +22,7 @@ export default function ProfilePage() {
         <CardHeader>
           <div className="flex items-center gap-4">
             <Avatar className="h-20 w-20">
-              <AvatarImage src={`https://placehold.co/80x80.png`} alt={`${user.firstName} ${user.lastName}`} data-ai-hint="person" />
+              <AvatarImage src="/img/user-avatar.png" alt={`${user.firstName} ${user.lastName}`} />
               <AvatarFallback className="text-3xl">{userInitial}</AvatarFallback>
             </Avatar>
             <div>

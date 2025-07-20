@@ -16,6 +16,7 @@ import { LogOut, User as UserIcon } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 const getTitleFromPathname = (pathname: string) => {
   if (pathname === '/dashboard') return 'Dashboard';
@@ -47,7 +48,7 @@ export function DashboardHeader() {
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">
             <Avatar>
-              <AvatarImage src={`https://placehold.co/40x40.png`} alt={`${user?.firstName} ${user?.lastName}`} data-ai-hint="person" />
+              <AvatarImage src="/img/user-avatar.png" alt={`${user?.firstName} ${user?.lastName}`} />
               <AvatarFallback>{userInitial}</AvatarFallback>
             </Avatar>
             <span className="sr-only">Toggle user menu</span>

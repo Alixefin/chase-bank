@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, Sector } from 'recharts';
@@ -97,6 +98,7 @@ interface DashboardProps {
 }
 
 const MyCards = ({ user, accounts }: { user: User | null, accounts: Account[] }) => {
+    const creditCardAccount = accounts.find(a => a.name === 'Credit Card');
     return (
     <Card className="bg-card">
         <CardHeader className="flex flex-row items-center justify-between">
@@ -111,7 +113,7 @@ const MyCards = ({ user, accounts }: { user: User | null, accounts: Account[] })
                            <div className="relative aspect-[1.58] bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl p-6 text-white flex flex-col justify-between">
                                 <div className="flex justify-between items-start">
                                     <span className="font-bold text-lg">Credit</span>
-                                    <Image src="https://placehold.co/40x20.png" alt="Visa Logo" width={40} height={20} data-ai-hint="visa logo" />
+                                    <Image src="/img/visa-logo.png" alt="Visa Logo" width={40} height={20} />
                                 </div>
                                 <div>
                                     <span className="text-sm opacity-80">Balance</span>
@@ -221,7 +223,7 @@ const RecentTransactions = ({ transactions }: RecentTransactionsProps) => (
                 {transactions.slice(0, 5).map(t => (
                     <div key={t.id} className="flex items-center space-x-4">
                         <Avatar className="h-10 w-10 rounded-lg">
-                           <AvatarImage src={`https://placehold.co/40x40.png`} data-ai-hint={t.description.split(' ')[0].toLowerCase() + " logo"} />
+                           <AvatarImage src={`/img/${t.description.split(' ')[0].toLowerCase()}-logo.png`} />
                            <AvatarFallback>{t.description.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
@@ -250,9 +252,9 @@ const TransferWidget = () => (
                 <label className="text-sm font-medium text-muted-foreground">Choose Recipient</label>
                 <div className="flex items-center space-x-2 mt-2">
                     <Button variant="outline" size="icon" className="rounded-full h-10 w-10">+</Button>
-                    {['person1', 'person2', 'person3', 'person4'].map(p => (
+                    {['contact-1', 'contact-2', 'contact-3', 'contact-4'].map((p, index) => (
                         <Avatar key={p} className="h-10 w-10">
-                            <AvatarImage src={`https://placehold.co/40x40.png`} data-ai-hint="person face" />
+                            <AvatarImage src={`/img/contact-${index + 1}.png`} />
                             <AvatarFallback>{p.charAt(0).toUpperCase()}</AvatarFallback>
                         </Avatar>
                     ))}
@@ -389,7 +391,7 @@ const MobileDashboard = ({ user, accounts, transactions }: DashboardProps) => {
                         {recentTransactions.map(t => (
                             <div key={t.id} className="flex items-center space-x-4">
                                 <Avatar className="h-10 w-10 rounded-lg">
-                                   <AvatarImage src={`https://placehold.co/40x40.png`} data-ai-hint={t.description.split(' ')[0].toLowerCase() + " logo"} />
+                                   <AvatarImage src={`/img/${t.description.split(' ')[0].toLowerCase()}-logo.png`} />
                                    <AvatarFallback>{t.description.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1">

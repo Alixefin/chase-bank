@@ -44,7 +44,7 @@ export default function ChatPage() {
                         <div key={index} className={`flex items-start gap-3 ${msg.sender === 'user' ? 'justify-end' : ''}`}>
                             {msg.sender === 'bot' && (
                                 <Avatar>
-                                    <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="robot" />
+                                    <AvatarImage src="/img/ai-avatar.png" />
                                     <AvatarFallback>AI</AvatarFallback>
                                 </Avatar>
                             )}
@@ -53,7 +53,7 @@ export default function ChatPage() {
                             </div>
                              {msg.sender === 'user' && (
                                 <Avatar>
-                                    <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="person" />
+                                    <AvatarImage src="/img/user-avatar.png" />
                                     <AvatarFallback>U</AvatarFallback>
                                 </Avatar>
                             )}

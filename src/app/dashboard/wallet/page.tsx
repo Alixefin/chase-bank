@@ -26,7 +26,7 @@ export default function WalletPage() {
                 <div className="relative aspect-[1.58] bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl p-6 text-white flex flex-col justify-between shadow-lg">
                     <div className="flex justify-between items-start">
                         <span className="font-bold text-lg">Credit</span>
-                         <Image src="https://placehold.co/40x20.png" alt="Visa Logo" width={40} height={20} data-ai-hint="visa logo" />
+                         <Image src="/img/visa-logo.png" alt="Visa Logo" width={40} height={20} />
                     </div>
                     <div>
                         <span className="text-sm opacity-80">Balance</span>
