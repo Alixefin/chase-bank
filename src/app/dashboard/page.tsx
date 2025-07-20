@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, Sector } from 'recharts';
@@ -32,6 +31,7 @@ import {
     AlertDialogTitle,
   } from "@/components/ui/alert-dialog";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { VisaLogo } from '@/components/visa-logo';
 
 const cashFlowData = [
   { name: 'Jan', Income: 4000, Expenses: 2400 },
@@ -112,7 +112,7 @@ const MyCards = ({ user, accounts }: { user: User | null, accounts: Account[] })
                                 <div className="flex justify-between items-start">
                                     <span className="font-bold text-lg">Credit</span>
                                     <div className="w-16">
-                                        <Image src="/img/visa-logo.png" alt="Visa Logo" width={60} height={20} />
+                                        <Image src="/img/visa-logo.png" alt="Visa Logo" width={60} height={20} className="w-full h-auto" />
                                     </div>
                                 </div>
                                 <div>
@@ -223,7 +223,6 @@ const RecentTransactions = ({ transactions }: RecentTransactionsProps) => (
                 {transactions.slice(0, 5).map(t => (
                     <div key={t.id} className="flex items-center space-x-4">
                         <Avatar className="h-10 w-10 rounded-lg">
-                           <AvatarImage src={`/img/${t.description.split(' ')[0].toLowerCase()}-logo.png`} />
                            <AvatarFallback>{t.description.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
@@ -391,7 +390,6 @@ const MobileDashboard = ({ user, accounts, transactions }: DashboardProps) => {
                         {recentTransactions.map(t => (
                             <div key={t.id} className="flex items-center space-x-4">
                                 <Avatar className="h-10 w-10 rounded-lg">
-                                   <Image src={`/img/${t.description.split(' ')[0].toLowerCase()}-logo.png`} alt={`${t.description} logo`} width={40} height={40} />
                                    <AvatarFallback>{t.description.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1">
@@ -456,3 +454,5 @@ const QuickActionButton = ({ icon: Icon, label, isText = false, href, onClick }:
         </Link>
     )
 }
+
+    
