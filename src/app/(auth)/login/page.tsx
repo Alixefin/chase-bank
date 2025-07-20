@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -45,14 +46,25 @@ export default function LoginPage() {
     mode: "onTouched", // This will trigger validation on blur
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // In a real app, you'd have more complex logic here.
-    // For this prototype, any login is considered successful.
-    login(values.username); 
-    toast({
-      title: "Login Successful",
-      description: "Welcome back!",
-    });
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const success = login(values.username, values.password);
+
+    if (success) {
+      toast({
+        title: "Login Successful",
+        description: "Welcome back!",
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Login Failed",
+        description: "Invalid username or password.",
+      });
+      form.setError("password", {
+        type: "manual",
+        message: "Invalid credentials"
+      });
+    }
   }
 
   return (

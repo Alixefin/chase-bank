@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
@@ -9,7 +10,7 @@ interface AuthContextType {
   user: User | null;
   accounts: Account[];
   transactions: Transaction[];
-  login: (username: string) => void;
+  login: (username: string, password?: string) => boolean;
   logout: () => void;
   addTransaction: (newTransaction: Omit<Transaction, 'id' | 'date'>) => void;
   transferFunds: (fromAccountId: string, toAccountId: string, amount: number) => void;
@@ -31,12 +32,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  const login = (username: string) => {
-    // In a real app, you'd verify credentials. Here, we just log in.
-    const userToLogin = { ...mockUser, email: `${username.toLowerCase()}@example.com` };
-    localStorage.setItem('secureBankUser', JSON.stringify(userToLogin));
-    setUser(userToLogin);
-    router.push('/dashboard');
+  const login = (username: string, password?: string): boolean => {
+    const validUsername = 'davidjones09020';
+    const validPassword = 'Password123!';
+
+    // For registration flow, or if password is not provided, we might have different logic
+    if (password === undefined) {
+      const userToLogin = { ...mockUser, email: `${username.toLowerCase()}@example.com` };
+      localStorage.setItem('secureBankUser', JSON.stringify(userToLogin));
+      setUser(userToLogin);
+      router.push('/dashboard');
+      return true;
+    }
+    
+    if (username.toLowerCase() === validUsername && password === validPassword) {
+      const userToLogin = { ...mockUser, email: `${username.toLowerCase()}@example.com` };
+      localStorage.setItem('secureBankUser', JSON.stringify(userToLogin));
+      setUser(userToLogin);
+      router.push('/dashboard');
+      return true;
+    }
+
+    return false;
   };
 
   const logout = () => {

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -39,7 +40,7 @@ export default function RegisterPage() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Simulate registration and login
+    // Simulate registration and login without password check for registration
     login(values.email);
     toast({
       title: "Registration Successful",
