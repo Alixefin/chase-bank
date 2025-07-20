@@ -26,7 +26,8 @@ import {
   Phone,
   Settings,
   HelpCircle,
-  Briefcase
+  Briefcase,
+  LogOut,
 } from "lucide-react";
 
 import { useAuth } from "@/context/auth-context";
@@ -58,6 +59,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu";
+import type { User } from "@/lib/data";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -76,7 +78,7 @@ const mobileNavItems = [
     { href: "/dashboard/more", icon: MoreHorizontal, label: "More" },
 ];
 
-const MobileHeader = () => (
+const MobileHeader = ({ user, logout }: { user: User | null; logout: () => void; }) => (
     <header className="sticky top-0 z-10 flex h-14 items-center justify-between bg-background px-4">
         <div className="flex items-center gap-4">
             <Link href="/dashboard/chat">
@@ -91,9 +93,32 @@ const MobileHeader = () => (
              <Link href="/dashboard/notifications">
                 <Bell className="text-muted-foreground" />
             </Link>
-            <Link href="/dashboard/profile">
-                <CircleUserRound className="text-muted-foreground" />
-            </Link>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <button>
+                        <CircleUserRound className="text-muted-foreground" />
+                    </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                     <DropdownMenuItem asChild>
+                         <Link href="/dashboard/profile">
+                            <UserIcon className="mr-2 h-4 w-4" />
+                            <span>{user?.name}</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                         <Link href="/dashboard/profile">
+                            <Settings className="mr-2 h-4 w-4" />
+                            <span>Settings</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                     <DropdownMenuItem onClick={logout}>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        <span>Log out</span>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </div>
     </header>
 );
@@ -148,7 +173,7 @@ export default function DashboardLayout({
   if (isMobile) {
       return (
         <div className="flex flex-col min-h-screen bg-background">
-            <MobileHeader />
+            <MobileHeader user={user} logout={logout} />
             <main className="flex-1 overflow-y-auto pb-16">
                 {children}
             </main>
@@ -235,7 +260,7 @@ export default function DashboardLayout({
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                      <DropdownMenuItem onClick={logout}>
-                        <UserIcon className="mr-2 h-4 w-4" />
+                        <LogOut className="mr-2 h-4 w-4" />
                         <span>Log out</span>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
