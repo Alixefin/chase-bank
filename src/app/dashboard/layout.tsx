@@ -46,7 +46,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard-header";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -157,6 +157,35 @@ export default function DashboardLayout({
   const router = useRouter();
   const isMobile = useIsMobile();
   const userInitial = user?.firstName?.charAt(0).toUpperCase() || "U";
+  const inactivityTimer = useRef<NodeJS.Timeout>();
+
+  const resetInactivityTimer = () => {
+    if (inactivityTimer.current) {
+        clearTimeout(inactivityTimer.current);
+    }
+    inactivityTimer.current = setTimeout(() => {
+        logout();
+    }, 5 * 60 * 1000); // 5 minutes
+  };
+
+  useEffect(() => {
+    if (user) {
+        const events = ['mousemove', 'keydown', 'mousedown', 'touchstart'];
+
+        const eventListener = () => resetInactivityTimer();
+
+        events.forEach(event => window.addEventListener(event, eventListener));
+        resetInactivityTimer(); // Initial timer start
+
+        return () => {
+            events.forEach(event => window.removeEventListener(event, eventListener));
+            if (inactivityTimer.current) {
+                clearTimeout(inactivityTimer.current);
+            }
+        };
+    }
+  }, [user, logout]);
+
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem('secureBankUser');

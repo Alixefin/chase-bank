@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = (username: string, password?: string): boolean => {
     const validUsername = 'davidjones09020';
-    const validPassword = 'Password123!';
+    const validPassword = '$Almighty12';
 
     // For registration flow, or if password is not provided, we might have different logic
     if (password === undefined) {
@@ -56,11 +56,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return false;
   };
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem('secureBankUser');
     setUser(null);
     router.push('/login');
-  };
+  }, [router]);
 
   const addTransaction = useCallback((newTransaction: Omit<Transaction, 'id' | 'date'>) => {
     setTransactions(prev => [
