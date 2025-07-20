@@ -63,7 +63,7 @@ export default function LoginPage() {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-pink-600">Username</FormLabel>
+                  <FormLabel className="text-gray-500">Username</FormLabel>
                   <FormControl>
                     <Input {...field} className="border-0 border-b rounded-none border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-2 focus:border-primary" />
                   </FormControl>

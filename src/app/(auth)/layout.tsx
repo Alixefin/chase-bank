@@ -21,6 +21,7 @@ export default function AuthLayout({
 
         <main className="relative z-20 flex min-h-screen w-full flex-col items-center justify-center p-4">
         <div className="flex items-center gap-2 mb-8">
+            <Logo className="h-12 w-12 text-white" />
             <h1 className="text-5xl font-extrabold text-white tracking-wider">SecureBank</h1>
         </div>
         {children}
