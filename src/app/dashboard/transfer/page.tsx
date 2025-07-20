@@ -62,6 +62,11 @@ export default function TransferPage() {
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      fromAccountId: "",
+      toAccountId: "",
+      amount: undefined, // Initialize as undefined but it will be controlled
+    },
   });
 
   function handleTransferConfirm() {
@@ -150,7 +155,14 @@ export default function TransferPage() {
                   <FormControl>
                     <div className="relative">
                         <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">$</span>
-                        <Input type="number" placeholder="0.00" className="pl-7" {...field} />
+                        <Input
+                          type="number"
+                          placeholder="0.00"
+                          className="pl-7"
+                          {...field}
+                          value={field.value ?? ""}
+                          onChange={(e) => field.onChange(e.target.value === '' ? undefined : e.target.valueAsNumber)}
+                        />
                     </div>
                   </FormControl>
                   <FormMessage />
