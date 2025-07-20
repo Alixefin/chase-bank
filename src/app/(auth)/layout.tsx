@@ -15,7 +15,7 @@ export default function AuthLayout({
       <header className="flex justify-center py-8">
         <Logo className="h-10 w-32" />
       </header>
-      <main className="flex flex-1 items-center justify-center px-4">
+      <main className="flex flex-1 items-center justify-center px-4 mb-8">
         {children}
       </main>
       <footer className="bg-white/95 py-8 text-sm text-gray-600">
