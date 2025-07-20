@@ -5,10 +5,12 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, ArrowRight, ChevronDown, MoreHorizontal } from 'lucide-react';
+import { ChevronDown, MoreHorizontal } from 'lucide-react';
 import React from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Image from 'next/image';
+import { useAuth } from '@/context/auth-context';
+import type { Account, Transaction, User } from '@/lib/data';
 
 const cashFlowData = [
   { name: 'Jan', Income: 4000, Expenses: 2400 },
@@ -29,7 +31,7 @@ const expensesData = [
     { name: 'More', value: 200, color: '#FF9143' },
 ];
 
-const transactions = [
+const mockTransactionsData = [
     { logo: '/img/spotify.png', company: 'Spotify', category: 'Entertainment', amount: -12.99, date: 'Sep 25, 2021', dataAiHint: 'logo music' },
     { logo: '/img/chickfila.png', company: 'Chick-Fil-A', category: 'Dining', amount: -27.32, date: 'Sep 25, 2021', dataAiHint: 'logo food' },
     { logo: '/img/disney.png', company: 'Disney+', category: 'Streaming Service', amount: -7.99, date: 'Sep 24, 2021', dataAiHint: 'logo movie' },
@@ -40,6 +42,8 @@ const transactions = [
 const formatCurrency = (amount: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 
 export default function DashboardPage() {
+  const { user, accounts, transactions } = useAuth();
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
@@ -48,14 +52,14 @@ export default function DashboardPage() {
 
             {/* Left side of main content */}
             <div className="xl:col-span-2 space-y-6">
-                <MyCards />
+                <MyCards user={user} accounts={accounts} />
                 <CashFlowChart />
                 <ExpensesByCategory />
             </div>
 
             {/* Right side of main content */}
             <div className="xl:col-span-1 space-y-6">
-                <RecentTransactions />
+                <RecentTransactions transactions={mockTransactionsData}/>
                 <TransferWidget />
             </div>
         </div>
@@ -63,28 +67,39 @@ export default function DashboardPage() {
   );
 }
 
-const MyCards = () => (
+interface MyCardsProps {
+  user: User | null;
+  accounts: Account[];
+}
+
+const MyCards = ({ user, accounts }: MyCardsProps) => {
+    const checkingAccount = accounts.find(a => a.name === 'Checking');
+    const savingsAccount = accounts.find(a => a.name === 'Savings');
+    const creditCardAccount = accounts.find(a => a.name === 'Credit Card');
+
+    return (
     <Card className="bg-card">
         <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>My Cards</CardTitle>
             <MoreHorizontal className="text-muted-foreground" />
         </CardHeader>
         <CardContent>
-            <Carousel opts={{ align: "start", loop: true }} className="w-full">
+            <Carousel opts={{ align: "start", loop: false }} className="w-full">
                 <CarouselContent>
+                    {checkingAccount && (
                     <CarouselItem className="basis-full md:basis-1/2">
                         <div className="p-1">
                            <div className="relative aspect-[1.58] bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl p-6 text-white flex flex-col justify-between">
                                 <div>
                                     <span className="text-sm opacity-80">Balance</span>
-                                    <p className="text-2xl font-bold">$13,497.21</p>
+                                    <p className="text-2xl font-bold">{formatCurrency(checkingAccount.balance)}</p>
                                 </div>
                                 <div className="space-y-1">
                                     <p className="font-mono text-lg tracking-widest">···· ···· ···· 4562</p>
                                     <div className="flex justify-between items-end text-sm">
                                         <div>
                                             <span className="opacity-80 block text-xs">Card Holder</span>
-                                            Max Watson
+                                            {user?.name}
                                         </div>
                                         <div>
                                             <span className="opacity-80 block text-xs">Expires</span>
@@ -97,43 +112,46 @@ const MyCards = () => (
                             </div>
                         </div>
                     </CarouselItem>
+                    )}
+                    {savingsAccount && (
                     <CarouselItem className="basis-full md:basis-1/2">
                        <div className="p-1">
                            <div className="relative aspect-[1.58] bg-gradient-to-br from-teal-400 to-green-500 rounded-xl p-6 text-white flex flex-col justify-between">
                                 <div>
                                     <span className="text-sm opacity-80">Balance</span>
-                                    <p className="text-2xl font-bold">$1,337.10</p>
+                                    <p className="text-2xl font-bold">{formatCurrency(savingsAccount.balance)}</p>
                                 </div>
                                 <div className="space-y-1">
                                     <p className="font-mono text-lg tracking-widest">···· ···· ···· 7784</p>
                                     <div className="flex justify-between items-end text-sm">
                                        <div>
-                                            <span className="opacity-80 block text-xs">Card Holder</span>
-                                            Max Watson
+                                            <span className="opacity-80 block text-xs">Account Holder</span>
+                                            {user?.name}
                                         </div>
                                         <div>
-                                            <span className="opacity-80 block text-xs">Expires</span>
-                                            08/25
+                                            <span className="opacity-80 block text-xs">Account Type</span>
+                                            Savings
                                         </div>
-                                       <Image src="/img/visa-logo.png" alt="Visa Logo" width={40} height={20} data-ai-hint="logo" />
-                                    </div>
+                                   </div>
                                 </div>
                             </div>
                         </div>
                     </CarouselItem>
+                    )}
+                    {creditCardAccount && (
                      <CarouselItem className="basis-full md:basis-1/2">
                        <div className="p-1">
                            <div className="relative aspect-[1.58] bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl p-6 text-white flex flex-col justify-between">
                                 <div>
                                     <span className="text-sm opacity-80">Balance</span>
-                                    <p className="text-2xl font-bold">$5,821.50</p>
+                                    <p className="text-2xl font-bold">{formatCurrency(creditCardAccount.balance)}</p>
                                 </div>
                                 <div className="space-y-1">
                                     <p className="font-mono text-lg tracking-widest">···· ···· ···· 1544</p>
                                     <div className="flex justify-between items-end text-sm">
                                         <div>
                                             <span className="opacity-80 block text-xs">Card Holder</span>
-                                            Max Watson
+                                            {user?.name}
                                         </div>
                                         <div>
                                             <span className="opacity-80 block text-xs">Expires</span>
@@ -145,6 +163,7 @@ const MyCards = () => (
                             </div>
                         </div>
                     </CarouselItem>
+                    )}
                 </CarouselContent>
                 <div className="hidden md:block">
                   <CarouselPrevious className="absolute -left-4 top-1/2 -translate-y-1/2" />
@@ -153,7 +172,7 @@ const MyCards = () => (
             </Carousel>
         </CardContent>
     </Card>
-);
+)};
 
 const CashFlowChart = () => (
     <Card className="bg-card">
@@ -218,7 +237,18 @@ const ExpensesByCategory = () => {
     );
 };
 
-const RecentTransactions = () => (
+interface RecentTransactionsProps {
+  transactions: {
+    logo: string;
+    company: string;
+    category: string;
+    amount: number;
+    date: string;
+    dataAiHint: string;
+  }[];
+}
+
+const RecentTransactions = ({ transactions }: RecentTransactionsProps) => (
     <Card className="bg-card">
         <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Transactions</CardTitle>
