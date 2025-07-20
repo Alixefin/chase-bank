@@ -1,22 +1,88 @@
 "use client";
 
+import { useAuth } from '@/context/auth-context';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Construction } from "lucide-react";
+import { CreditCard, MoreVertical, ShieldCheck, Zap } from 'lucide-react';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+
+const formatCurrency = (amount: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 
 export default function CardsPage() {
+  const { user, accounts } = useAuth();
+  const creditCardAccount = accounts.find(a => a.name === 'Credit Card');
+
+  if (!creditCardAccount) {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Credit Cards</CardTitle>
+                <CardDescription>No credit card account found.</CardDescription>
+            </CardHeader>
+        </Card>
+    );
+  }
+
   return (
     <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle>Card Management</CardTitle>
+          <CardTitle>My Cards</CardTitle>
           <CardDescription>
             Manage your debit and credit cards.
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col items-center justify-center min-h-[300px] text-center">
-            <Construction className="h-16 w-16 text-muted-foreground mb-4" />
-            <h3 className="text-xl font-semibold">Coming Soon</h3>
-            <p className="text-muted-foreground">This section is currently under construction.</p>
+        <CardContent>
+            <div className="max-w-md mx-auto">
+                <div className="relative aspect-[1.58] bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl p-6 text-white flex flex-col justify-between shadow-lg">
+                    <div>
+                        <div className="flex justify-between items-start">
+                            <span className="font-bold text-xl">SecureBank</span>
+                            <Image src="/img/visa-logo.png" alt="Visa Logo" width={60} height={30} data-ai-hint="logo" />
+                        </div>
+                        <p className="text-sm opacity-80 mt-4">Balance</p>
+                        <p className="text-3xl font-bold">{formatCurrency(creditCardAccount.balance)}</p>
+                    </div>
+                    <div className="space-y-1">
+                        <p className="font-mono text-xl tracking-widest text-center">···· ···· ···· 1544</p>
+                        <div className="flex justify-between items-end text-sm">
+                            <div>
+                                <span className="opacity-80 block text-xs">Card Holder</span>
+                                {user?.name}
+                            </div>
+                            <div>
+                                <span className="opacity-80 block text-xs">Expires</span>
+                                12/26
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+            <CardTitle>Card Controls</CardTitle>
+            <CardDescription>Quick actions for your card security.</CardDescription>
+        </CardHeader>
+        <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Button variant="outline" className="flex flex-col h-24 items-center justify-center">
+                <ShieldCheck className="w-8 h-8 mb-2 text-primary" />
+                <span>Lock Card</span>
+            </Button>
+            <Button variant="outline" className="flex flex-col h-24 items-center justify-center">
+                <CreditCard className="w-8 h-8 mb-2 text-primary" />
+                <span>Report Lost</span>
+            </Button>
+             <Button variant="outline" className="flex flex-col h-24 items-center justify-center">
+                <Zap className="w-8 h-8 mb-2 text-primary" />
+                <span>Set Limits</span>
+            </Button>
+             <Button variant="outline" className="flex flex-col h-24 items-center justify-center">
+                <MoreVertical className="w-8 h-8 mb-2 text-primary" />
+                <span>More</span>
+            </Button>
         </CardContent>
       </Card>
     </div>

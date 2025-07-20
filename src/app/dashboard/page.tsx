@@ -4,13 +4,13 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, Sector } from 'recharts';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { ChevronDown, MoreHorizontal, ChevronRight, Briefcase, Landmark, PiggyBank, CreditCardIcon, Plus } from 'lucide-react';
 import React from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Image from 'next/image';
 import { useAuth } from '@/context/auth-context';
-import type { Account, User } from '@/lib/data';
+import type { Account, Transaction, User } from '@/lib/data';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   Accordion,
@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/accordion"
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { format } from 'date-fns';
 
 const cashFlowData = [
   { name: 'Jan', Income: 4000, Expenses: 2400 },
@@ -28,9 +29,6 @@ const cashFlowData = [
   { name: 'Apr', Income: 2780, Expenses: 1908 },
   { name: 'May', Income: 4890, Expenses: 2800 },
   { name: 'Jun', Income: 2390, Expenses: 1800 },
-  { name: 'Jul', Income: 3490, Expenses: 2300 },
-  { name: 'Aug', Income: 4200, Expenses: 2100 },
-  { name: 'Sep', Income: 3100, Expenses: 1500 },
 ];
 
 const expensesData = [
@@ -41,21 +39,21 @@ const expensesData = [
 ];
 
 const mockTransactionsData = [
-    { logo: '/img/spotify.png', company: 'Spotify', category: 'Entertainment', amount: -12.99, date: 'Sep 25, 2021', dataAiHint: 'logo music' },
-    { logo: '/img/chickfila.png', company: 'Chick-Fil-A', category: 'Dining', amount: -27.32, date: 'Sep 25, 2021', dataAiHint: 'logo food' },
-    { logo: '/img/disney.png', company: 'Disney+', category: 'Streaming Service', amount: -7.99, date: 'Sep 24, 2021', dataAiHint: 'logo movie' },
-    { logo: '/img/chevron.png', company: 'Chevron', category: 'Gas', amount: -53.70, date: 'Sep 23, 2021', dataAiHint: 'logo gas' },
-    { logo: '/img/nike.png', company: 'Nike', category: 'Apparel', amount: -235.17, date: 'Sep 23, 2021', dataAiHint: 'logo shoe' },
+    { logo: '/img/spotify.png', company: 'Spotify', category: 'Entertainment', amount: -12.99, date: '2025-06-25', dataAiHint: 'logo music' },
+    { logo: '/img/chickfila.png', company: 'Chick-Fil-A', category: 'Dining', amount: -27.32, date: '2025-06-25', dataAiHint: 'logo food' },
+    { logo: '/img/disney.png', company: 'Disney+', category: 'Streaming Service', amount: -7.99, date: '2025-06-24', dataAiHint: 'logo movie' },
+    { logo: '/img/chevron.png', company: 'Chevron', category: 'Gas', amount: -53.70, date: '2025-06-23', dataAiHint: 'logo gas' },
+    { logo: '/img/nike.png', company: 'Nike', category: 'Apparel', amount: -235.17, date: '2025-06-23', dataAiHint: 'logo shoe' },
 ];
 
 const formatCurrency = (amount: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 
 export default function DashboardPage() {
-  const { user, accounts } = useAuth();
+  const { user, accounts, transactions } = useAuth();
   const isMobile = useIsMobile();
 
   if (isMobile) {
-    return <MobileDashboard user={user} accounts={accounts} />
+    return <MobileDashboard user={user} accounts={accounts} transactions={transactions} />
   }
 
   return (
@@ -81,12 +79,13 @@ export default function DashboardPage() {
   );
 }
 
-interface UserProps {
+interface DashboardProps {
   user: User | null;
   accounts: Account[];
+  transactions: Transaction[];
 }
 
-const MyCards = ({ user, accounts }: UserProps) => {
+const MyCards = ({ user, accounts }: { user: User | null, accounts: Account[] }) => {
     const checkingAccount = accounts.find(a => a.name === 'Checking');
     const savingsAccount = accounts.find(a => a.name === 'Savings');
     const creditCardAccount = accounts.find(a => a.name === 'Credit Card');
@@ -117,7 +116,7 @@ const MyCards = ({ user, accounts }: UserProps) => {
                                         </div>
                                         <div>
                                             <span className="opacity-80 block text-xs">Expires</span>
-                                            03/24
+                                            03/26
                                         </div>
                                         <Image src="/img/visa-logo.png" alt="Visa Logo" width={40} height={20} data-ai-hint="logo" />
                                     </div>
@@ -282,7 +281,7 @@ const RecentTransactions = ({ transactions }: RecentTransactionsProps) => (
                         </div>
                         <div className="text-right">
                             <p className="font-medium">{formatCurrency(t.amount)}</p>
-                            <p className="text-xs text-muted-foreground">{t.date}</p>
+                            <p className="text-xs text-muted-foreground">{format(new Date(t.date), 'MMM d, yyyy')}</p>
                         </div>
                     </div>
                 ))}
@@ -337,7 +336,7 @@ const TransferWidget = () => (
 );
 
 
-const MobileDashboard = ({ user, accounts }: UserProps) => {
+const MobileDashboard = ({ user, accounts, transactions }: DashboardProps) => {
     const openAccountItems = [
         { icon: CreditCardIcon, label: 'Credit cards', hint: 'credit card' },
         { icon: Landmark, label: 'Checking', hint: 'bank' },
@@ -346,14 +345,16 @@ const MobileDashboard = ({ user, accounts }: UserProps) => {
     ];
 
     const checkingAccount = accounts.find(a => a.name === 'Checking');
+    const savingsAccount = accounts.find(a => a.name === 'Savings');
+    const recentTransactions = transactions.slice(0, 3);
 
     return (
         <div className="p-4 space-y-6">
             <div className="grid grid-cols-4 gap-2 text-center text-xs">
-                <QuickActionButton icon={Plus} label="Add" />
-                <QuickActionButton label="Send | Zelle®" isText />
-                <QuickActionButton label="Deposit checks" isText />
-                <QuickActionButton label="Pay bills" isText />
+                <QuickActionButton icon={Plus} label="Add" href="#" />
+                <QuickActionButton label="Send | Zelle®" isText href="/dashboard/zelle" />
+                <QuickActionButton label="Deposit checks" isText href="/dashboard/deposit" />
+                <QuickActionButton label="Pay bills" isText href="/dashboard/bill-pay" />
             </div>
 
             <Card className="bg-blue-50 border-blue-200 shadow-md">
@@ -380,11 +381,11 @@ const MobileDashboard = ({ user, accounts }: UserProps) => {
                     <AccordionItem value="item-1" className="border-none">
                         <Card className="shadow-sm">
                             <AccordionTrigger className="bg-primary text-primary-foreground px-4 py-2 rounded-t-lg hover:no-underline">
-                                <span className="font-semibold">Bank accounts (1)</span>
+                                <span className="font-semibold">Bank accounts (2)</span>
                             </AccordionTrigger>
-                            <AccordionContent className="p-4 bg-card rounded-b-lg">
+                            <AccordionContent className="p-0 bg-card rounded-b-lg">
                                 {checkingAccount && (
-                                    <Link href={`/dashboard/accounts/${checkingAccount.id}`} className="block">
+                                    <Link href={`/dashboard/accounts/${checkingAccount.id}`} className="block p-4 border-b">
                                         <div className="flex justify-between items-center text-sm font-semibold text-primary mb-2">
                                             <span>CHASE SECURE BANKING ...9403)</span>
                                             <ChevronRight />
@@ -393,16 +394,59 @@ const MobileDashboard = ({ user, accounts }: UserProps) => {
                                         <p className="text-sm text-muted-foreground">Available balance</p>
                                     </Link>
                                 )}
-                                <div className="border-t my-4"></div>
+                                {savingsAccount && (
+                                    <Link href={`/dashboard/accounts/${savingsAccount.id}`} className="block p-4">
+                                        <div className="flex justify-between items-center text-sm font-semibold text-primary mb-2">
+                                            <span>SAVINGS (...7784)</span>
+                                            <ChevronRight />
+                                        </div>
+                                        <p className="text-3xl font-bold tracking-tight">{formatCurrency(savingsAccount.balance)}</p>
+                                        <p className="text-sm text-muted-foreground">Available balance</p>
+                                    </Link>
+                                )}
+                                <div className="border-t my-0"></div>
+                                <div className="p-4">
                                 <Link href="#" className="flex justify-between items-center text-primary font-semibold">
                                     <span>Link external accounts</span>
                                     <ChevronRight />
                                 </Link>
+                                </div>
                             </AccordionContent>
                         </Card>
                     </AccordionItem>
                 </Accordion>
             </div>
+
+             <div>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Recent Activity</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-4">
+                        {recentTransactions.map(t => (
+                            <div key={t.id} className="flex items-center space-x-4">
+                                <Avatar className="h-10 w-10 rounded-lg">
+                                   <AvatarImage src={`https://placehold.co/40x40/png`} data-ai-hint={t.description.split(' ')[0]} />
+                                   <AvatarFallback>{t.description.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                <div className="flex-1">
+                                    <p className="font-medium">{t.description}</p>
+                                    <p className="text-xs text-muted-foreground">{format(new Date(t.date), 'MMM d, yyyy')}</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className={`font-medium ${t.amount > 0 ? 'text-green-600' : ''}`}>{formatCurrency(t.amount)}</p>
+                                </div>
+                            </div>
+                        ))}
+                        </div>
+                    </CardContent>
+                    <CardFooter>
+                         <Button variant="outline" className="w-full">View all transactions</Button>
+                    </CardFooter>
+                </Card>
+            </div>
+
 
             <div>
                 <h2 className="text-lg font-bold mb-2">Open an account</h2>
@@ -419,19 +463,21 @@ const MobileDashboard = ({ user, accounts }: UserProps) => {
     );
 };
 
-const QuickActionButton = ({ icon: Icon, label, isText = false }: { icon?: React.ElementType, label: string, isText?: boolean }) => {
+const QuickActionButton = ({ icon: Icon, label, isText = false, href }: { icon?: React.ElementType, label: string, isText?: boolean, href: string }) => {
     if (isText) {
         return (
-            <Button variant="ghost" className="bg-gray-100 rounded-full h-auto py-2 px-3 text-primary font-semibold text-xs shadow-sm">
-                {label}
-            </Button>
+            <Link href={href} className="flex-1">
+                <Button variant="ghost" className="bg-gray-100 rounded-full h-auto py-2 px-3 text-primary font-semibold text-xs shadow-sm w-full">
+                    {label}
+                </Button>
+            </Link>
         )
     }
     return (
-        <div className="flex flex-col items-center space-y-1">
+        <Link href={href} className="flex flex-col items-center space-y-1">
             <Button variant="ghost" size="icon" className="bg-gray-100 rounded-full w-12 h-12 shadow-sm">
                 {Icon && <Icon className="w-6 h-6 text-primary" />}
             </Button>
-        </div>
+        </Link>
     )
 }

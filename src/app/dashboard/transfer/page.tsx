@@ -30,6 +30,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { ArrowRightLeft, Landmark, Send, FileText } from "lucide-react";
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -39,63 +41,57 @@ const formatCurrency = (amount: number) => {
 };
 
 
-export default function TransferPage() {
-  const { accounts, transferFunds } = useAuth();
-  const { toast } = useToast();
-  const router = useRouter();
-  const [isConfirming, setIsConfirming] = useState(false);
-  
-  const FormSchema = z.object({
-    fromAccountId: z.string({ required_error: "Please select an account to transfer from." }),
-    toAccountId: z.string({ required_error: "Please select an account to transfer to." }),
-    amount: z.coerce.number().positive({ message: "Amount must be positive." }),
-  }).refine(data => data.fromAccountId !== data.toAccountId, {
-    message: "Cannot transfer to the same account.",
-    path: ["toAccountId"],
-  }).refine(data => {
-    const fromAccount = accounts.find(acc => acc.id === data.fromAccountId);
-    return fromAccount ? data.amount <= fromAccount.balance : false;
-  }, {
-    message: "Insufficient funds for this transfer.",
-    path: ["amount"],
-  });
-
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      fromAccountId: "",
-      toAccountId: "",
-      amount: undefined, // Initialize as undefined but it will be controlled
-    },
-  });
-
-  function handleTransferConfirm() {
-    const values = form.getValues();
-    transferFunds(values.fromAccountId, values.toAccountId, values.amount);
-    toast({
-      title: "Transfer Successful",
-      description: `${formatCurrency(values.amount)} has been transferred.`,
+const InternalTransferForm = () => {
+    const { accounts, transferFunds } = useAuth();
+    const { toast } = useToast();
+    const router = useRouter();
+    const [isConfirming, setIsConfirming] = useState(false);
+    
+    const FormSchema = z.object({
+        fromAccountId: z.string({ required_error: "Please select an account to transfer from." }),
+        toAccountId: z.string({ required_error: "Please select an account to transfer to." }),
+        amount: z.coerce.number().positive({ message: "Amount must be positive." }),
+    }).refine(data => data.fromAccountId !== data.toAccountId, {
+        message: "Cannot transfer to the same account.",
+        path: ["toAccountId"],
+    }).refine(data => {
+        const fromAccount = accounts.find(acc => acc.id === data.fromAccountId);
+        return fromAccount ? data.amount <= fromAccount.balance : false;
+    }, {
+        message: "Insufficient funds for this transfer.",
+        path: ["amount"],
     });
-    setIsConfirming(false);
-    form.reset();
-    router.push('/dashboard');
-  }
-  
-  function onSubmit() {
-    setIsConfirming(true);
-  }
 
-  const values = form.watch();
-  const fromAccount = accounts.find(acc => acc.id === values.fromAccountId);
-  const toAccount = accounts.find(acc => acc.id === values.toAccountId);
+    const form = useForm<z.infer<typeof FormSchema>>({
+        resolver: zodResolver(FormSchema),
+        defaultValues: {
+          fromAccountId: "",
+          toAccountId: "",
+          amount: 0,
+        },
+    });
 
-  return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle>Internal Transfer</CardTitle>
-        <CardDescription>Move funds between your SecureBank accounts.</CardDescription>
-      </CardHeader>
-      <CardContent>
+    function handleTransferConfirm() {
+        const values = form.getValues();
+        transferFunds(values.fromAccountId, values.toAccountId, values.amount);
+        toast({
+        title: "Transfer Successful",
+        description: `${formatCurrency(values.amount)} has been transferred.`,
+        });
+        setIsConfirming(false);
+        form.reset();
+        router.push('/dashboard');
+    }
+    
+    function onSubmit() {
+        setIsConfirming(true);
+    }
+
+    const values = form.watch();
+    const fromAccount = accounts.find(acc => acc.id === values.fromAccountId);
+    const toAccount = accounts.find(acc => acc.id === values.toAccountId);
+
+    return (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
@@ -111,7 +107,7 @@ export default function TransferPage() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {accounts.map(acc => (
+                      {accounts.filter(a=> a.name !== 'Credit Card').map(acc => (
                         <SelectItem key={acc.id} value={acc.id}>
                           {acc.name} - {formatCurrency(acc.balance)}
                         </SelectItem>
@@ -135,7 +131,7 @@ export default function TransferPage() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {accounts.map(acc => (
+                      {accounts.filter(a => a.name !== 'Credit Card').map(acc => (
                         <SelectItem key={acc.id} value={acc.id}>
                           {acc.name} - {formatCurrency(acc.balance)}
                         </SelectItem>
@@ -160,8 +156,7 @@ export default function TransferPage() {
                           placeholder="0.00"
                           className="pl-7"
                           {...field}
-                          value={field.value ?? ""}
-                          onChange={(e) => field.onChange(e.target.value === '' ? undefined : e.target.valueAsNumber)}
+                          onChange={(e) => field.onChange(e.target.valueAsNumber)}
                         />
                     </div>
                   </FormControl>
@@ -203,9 +198,49 @@ export default function TransferPage() {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-            
           </form>
         </Form>
+    )
+}
+
+const PlaceholderForm = ({ title, description }: {title: string, description: string}) => (
+    <div className="text-center py-12">
+        <h3 className="text-xl font-semibold">{title}</h3>
+        <p className="text-muted-foreground mt-2">{description}</p>
+        <Button className="mt-6">Get Started</Button>
+    </div>
+)
+
+
+export default function TransferPage() {
+
+  return (
+    <Card className="w-full max-w-2xl mx-auto">
+      <CardHeader>
+        <CardTitle>Pay & Transfer</CardTitle>
+        <CardDescription>Move money, pay bills, and send funds to others.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Tabs defaultValue="internal">
+            <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="internal"><ArrowRightLeft className="w-4 h-4 mr-2 sm:hidden"/>Internal Transfer</TabsTrigger>
+                <TabsTrigger value="external"><Landmark className="w-4 h-4 mr-2 sm:hidden"/>External Transfer</TabsTrigger>
+                <TabsTrigger value="zelle"><Send className="w-4 h-4 mr-2 sm:hidden"/>Send with Zelle®</TabsTrigger>
+                <TabsTrigger value="bill-pay"><FileText className="w-4 h-4 mr-2 sm:hidden"/>Pay Bills</TabsTrigger>
+            </TabsList>
+            <TabsContent value="internal" className="pt-6">
+                <InternalTransferForm />
+            </TabsContent>
+            <TabsContent value="external">
+                <PlaceholderForm title="External Account Transfers" description="Securely send money to your accounts at other banks." />
+            </TabsContent>
+             <TabsContent value="zelle">
+                <PlaceholderForm title="Send Money with Zelle®" description="A fast, safe and easy way to send money to friends and family." />
+            </TabsContent>
+            <TabsContent value="bill-pay">
+                <PlaceholderForm title="Bill Pay" description="Manage and pay all your bills from one place." />
+            </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   );

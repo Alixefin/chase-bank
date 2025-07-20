@@ -22,7 +22,11 @@ import {
   Star,
   MoreHorizontal,
   Plus,
-  BarChart2
+  BarChart2,
+  Phone,
+  Settings,
+  HelpCircle,
+  Briefcase
 } from "lucide-react";
 
 import { useAuth } from "@/context/auth-context";
@@ -47,14 +51,20 @@ import { Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { useIsMobile } from "@/hooks/use-mobile";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+  } from "@/components/ui/dropdown-menu";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/dashboard/transfer", icon: ArrowRightLeft, label: "Transactions" },
-  { href: "/dashboard/cards", icon: CreditCard, label: "Credit Cards" },
+  { href: "/dashboard/transfer", icon: ArrowRightLeft, label: "Pay & Transfer" },
+  { href: "/dashboard/cards", icon: CreditCard, label: "Cards" },
+  { href: "/dashboard/investing", icon: CandlestickChart, label: "Investing" },
   { href: "/dashboard/statements", icon: FileText, label: "Statements" },
   { href: "/dashboard/rewards", icon: Wallet, label: "Rewards & Deals" },
-  { href: "/dashboard/notifications", icon: Bell, label: "Notifications" },
 ];
 
 const mobileNavItems = [
@@ -62,18 +72,24 @@ const mobileNavItems = [
     { href: "/dashboard/transfer", icon: ArrowRightLeft, label: "Pay & transfer" },
     { href: "/dashboard/investing", icon: BarChart2, label: "Plan & track" },
     { href: "/dashboard/rewards", icon: Star, label: "Offers" },
-    { href: "#", icon: MoreHorizontal, label: "More" },
+    { href: "/dashboard/more", icon: MoreHorizontal, label: "More" },
 ];
 
 const MobileHeader = () => (
     <header className="sticky top-0 z-10 flex h-14 items-center justify-between bg-background px-4">
         <div className="flex items-center gap-4">
-            <MessageCircle className="text-muted-foreground" />
-            <WalletCards className="text-muted-foreground" />
+            <Link href="/dashboard/chat">
+                <MessageCircle className="text-muted-foreground" />
+            </Link>
+            <Link href="/dashboard/wallet">
+                <WalletCards className="text-muted-foreground" />
+            </Link>
         </div>
         <Logo className="h-8 w-8 text-primary" />
         <div className="flex items-center gap-4">
-            <Bell className="text-muted-foreground" />
+             <Link href="/dashboard/notifications">
+                <Bell className="text-muted-foreground" />
+            </Link>
             <Link href="/dashboard/profile">
                 <CircleUserRound className="text-muted-foreground" />
             </Link>
@@ -89,7 +105,8 @@ const MobileFooter = () => {
                 {mobileNavItems.map((item) => (
                     <Link key={item.label} href={item.href} className={cn(
                         "flex flex-col items-center justify-center gap-1 text-xs font-medium w-full h-full",
-                        pathname === item.href ? "text-primary" : "text-muted-foreground"
+                        pathname.startsWith(item.href) && item.href !== '/dashboard/more' ? "text-primary" : "text-muted-foreground",
+                        pathname === item.href ? "text-primary" : "text-muted-foreground",
                     )}>
                         <item.icon className="h-6 w-6" />
                         <span>{item.label}</span>
@@ -107,7 +124,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
   const isMobile = useIsMobile();
   const userInitial = user?.name?.charAt(0).toUpperCase() || "U";
@@ -182,17 +199,47 @@ export default function DashboardLayout({
                 </CardContent>
             </Card>
 
-            <div className="flex items-center gap-3">
-                <Avatar className="h-10 w-10">
-                    <AvatarImage src={`https://placehold.co/40x40.png`} alt={user.name} data-ai-hint="person" />
-                    <AvatarFallback>{userInitial}</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 group-data-[collapsible=icon]:hidden">
-                    <p className="text-sm font-semibold">{user.name}</p>
-                    <p className="text-xs text-muted-foreground">Los Angeles, CA</p>
-                </div>
-                <ChevronDown className="h-5 w-5 text-muted-foreground group-data-[collapsible=icon]:hidden" />
-            </div>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <div className="flex items-center gap-3 cursor-pointer">
+                        <Avatar className="h-10 w-10">
+                            <AvatarImage src={`https://placehold.co/40x40.png`} alt={user.name} data-ai-hint="person" />
+                            <AvatarFallback>{userInitial}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 group-data-[collapsible=icon]:hidden">
+                            <p className="text-sm font-semibold">{user.name}</p>
+                            <p className="text-xs text-muted-foreground">Los Angeles, CA</p>
+                        </div>
+                        <ChevronDown className="h-5 w-5 text-muted-foreground group-data-[collapsible=icon]:hidden" />
+                    </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 mb-2" align="end" forceMount>
+                    <DropdownMenuItem asChild>
+                         <Link href="/dashboard/profile">
+                            <UserIcon className="mr-2 h-4 w-4" />
+                            <span>Profile & Settings</span>
+                        </Link>
+                    </DropdownMenuItem>
+                     <DropdownMenuItem asChild>
+                        <Link href="/dashboard/notifications">
+                            <Bell className="mr-2 h-4 w-4" />
+                            <span>Notifications</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                         <Link href="/dashboard/support">
+                            <HelpCircle className="mr-2 h-4 w-4" />
+                            <span>Help & Support</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                     <DropdownMenuItem onClick={logout}>
+                        <UserIcon className="mr-2 h-4 w-4" />
+                        <span>Log out</span>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
