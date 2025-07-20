@@ -88,7 +88,7 @@ const MobileHeader = ({ user, logout }: { user: User | null; logout: () => void;
                 <WalletCards className="text-muted-foreground" />
             </Link>
         </div>
-        <Logo className="h-8 w-20 text-primary" />
+        <Logo variant="2" className="h-8 w-20 text-primary" />
         <div className="flex items-center gap-4">
              <Link href="/dashboard/notifications">
                 <Bell className="text-muted-foreground" />
@@ -97,7 +97,7 @@ const MobileHeader = ({ user, logout }: { user: User | null; logout: () => void;
                 <DropdownMenuTrigger asChild>
                     <button>
                         <Avatar className="h-8 w-8">
-                            <AvatarImage src="/img/user-avatar.png" alt="User avatar" />
+                            <AvatarImage src="/img/David.jpg" alt="User avatar" />
                             <AvatarFallback>{user?.firstName?.charAt(0)}</AvatarFallback>
                         </Avatar>
                     </button>
@@ -191,7 +191,7 @@ export default function DashboardLayout({
       <Sidebar side="left" variant="sidebar" collapsible="icon" className="bg-white border-r-0">
         <SidebarHeader className="p-4">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <Logo className="h-8 w-20" />
+            <Logo variant="2" className="h-8 w-20" />
           </Link>
         </SidebarHeader>
         <SidebarContent>
@@ -229,7 +229,7 @@ export default function DashboardLayout({
                 <DropdownMenuTrigger asChild>
                     <div className="flex items-center gap-3 cursor-pointer">
                         <Avatar className="h-10 w-10">
-                            <AvatarImage src="/img/user-avatar.png" alt={`${user.firstName} ${user.lastName}`} />
+                            <AvatarImage src="/img/David.jpg" alt={`${user.firstName} ${user.lastName}`} />
                             <AvatarFallback>{userInitial}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1 group-data-[collapsible=icon]:hidden">

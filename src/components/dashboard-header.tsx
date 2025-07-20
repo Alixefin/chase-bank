@@ -48,7 +48,7 @@ export function DashboardHeader() {
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">
             <Avatar>
-              <AvatarImage src="/img/user-avatar.png" alt={`${user?.firstName} ${user?.lastName}`} />
+              <AvatarImage src="/img/David.jpg" alt={`${user?.firstName} ${user?.lastName}`} />
               <AvatarFallback>{userInitial}</AvatarFallback>
             </Avatar>
             <span className="sr-only">Toggle user menu</span>

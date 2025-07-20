@@ -53,7 +53,7 @@ export default function ChatPage() {
                             </div>
                              {msg.sender === 'user' && (
                                 <Avatar>
-                                    <AvatarImage src="/img/user-avatar.png" />
+                                    <AvatarImage src="/img/David.jpg" />
                                     <AvatarFallback>U</AvatarFallback>
                                 </Avatar>
                             )}
