@@ -20,6 +20,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { AlertTriangle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   username: z.string().min(1, { message: "Please tell us your username." }),
@@ -41,6 +42,7 @@ export default function LoginPage() {
       rememberMe: false,
       useToken: false,
     },
+    mode: "onTouched", // This will trigger validation on blur
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -61,11 +63,14 @@ export default function LoginPage() {
             <FormField
               control={form.control}
               name="username"
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel className="text-primary font-semibold">Username</FormLabel>
+                  <FormLabel className="font-semibold text-gray-500">Username</FormLabel>
                   <FormControl>
-                    <Input {...field} className="border-0 border-b-2 rounded-none px-0 focus-visible:ring-0 focus-visible:ring-offset-0" />
+                    <Input {...field} className={cn(
+                      "border-0 border-b-2 rounded-none px-0 focus:border-primary",
+                      fieldState.error && "border-destructive focus:border-destructive"
+                    )} />
                   </FormControl>
                   <FormMessage>
                     {form.formState.errors.username && (
@@ -81,7 +86,7 @@ export default function LoginPage() {
             <FormField
               control={form.control}
               name="password"
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel className="font-semibold text-gray-500">Password</FormLabel>
                   <div className="relative">
@@ -89,7 +94,10 @@ export default function LoginPage() {
                       <Input
                         type={showPassword ? "text" : "password"}
                         {...field}
-                        className="border-0 border-b-2 rounded-none px-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                        className={cn(
+                          "border-0 border-b-2 rounded-none px-0 focus:border-primary",
+                          fieldState.error && "border-destructive focus:border-destructive"
+                        )}
                       />
                     </FormControl>
                     <button
@@ -100,7 +108,14 @@ export default function LoginPage() {
                       {showPassword ? "Hide" : "Show"}
                     </button>
                   </div>
-                  <FormMessage />
+                  <FormMessage>
+                     {form.formState.errors.password && (
+                        <div className="flex items-center text-destructive">
+                            <AlertTriangle className="h-4 w-4 mr-2" />
+                            {form.formState.errors.password.message}
+                        </div>
+                    )}
+                  </FormMessage>
                 </FormItem>
               )}
             />
