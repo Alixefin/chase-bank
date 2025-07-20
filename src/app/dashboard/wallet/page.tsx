@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import Image from 'next/image';
-import { VisaLogo } from '@/components/visa-logo';
 
 const formatCurrency = (amount: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 
@@ -27,7 +26,9 @@ export default function WalletPage() {
                 <div className="relative aspect-[1.58] bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl p-6 text-white flex flex-col justify-between shadow-lg">
                     <div className="flex justify-between items-start">
                         <span className="font-bold text-lg">Credit</span>
-                         <VisaLogo className="h-6 w-auto text-white" />
+                        <div className="w-16">
+                           <Image src="/img/visa-logo.png" alt="Visa Logo" width={60} height={20} />
+                        </div>
                     </div>
                     <div>
                         <span className="text-sm opacity-80">Balance</span>

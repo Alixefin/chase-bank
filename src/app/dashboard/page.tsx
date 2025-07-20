@@ -32,8 +32,6 @@ import {
     AlertDialogTitle,
   } from "@/components/ui/alert-dialog";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { VisaLogo } from '@/components/visa-logo';
-
 
 const cashFlowData = [
   { name: 'Jan', Income: 4000, Expenses: 2400 },
@@ -113,7 +111,9 @@ const MyCards = ({ user, accounts }: { user: User | null, accounts: Account[] })
                            <div className="relative aspect-[1.58] bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl p-6 text-white flex flex-col justify-between">
                                 <div className="flex justify-between items-start">
                                     <span className="font-bold text-lg">Credit</span>
-                                    <VisaLogo className="h-6 w-auto text-white" />
+                                    <div className="w-16">
+                                        <Image src="/img/visa-logo.png" alt="Visa Logo" width={60} height={20} />
+                                    </div>
                                 </div>
                                 <div>
                                     <span className="text-sm opacity-80">Balance</span>
@@ -254,7 +254,7 @@ const TransferWidget = () => (
                     <Button variant="outline" size="icon" className="rounded-full h-10 w-10">+</Button>
                     {['contact-1', 'contact-2', 'contact-3', 'contact-4'].map((p, index) => (
                         <Avatar key={p} className="h-10 w-10">
-                            <AvatarImage src={`/img/contact-${index + 1}.png`} />
+                            <AvatarImage src={`/img/${p}.png`} />
                             <AvatarFallback>{p.charAt(0).toUpperCase()}</AvatarFallback>
                         </Avatar>
                     ))}
