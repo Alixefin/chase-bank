@@ -14,7 +14,8 @@ import {
   Bell,
   Wallet,
   FileText,
-  PiggyBank
+  PiggyBank,
+  ChevronDown
 } from "lucide-react";
 
 import { useAuth } from "@/context/auth-context";
@@ -37,6 +38,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -138,5 +140,3 @@ export default function DashboardLayout({
     </div>
   );
 }
-
-    
