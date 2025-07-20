@@ -9,7 +9,7 @@ interface AuthContextType {
   user: User | null;
   accounts: Account[];
   transactions: Transaction[];
-  login: (email: string) => void;
+  login: (username: string) => void;
   logout: () => void;
   addTransaction: (newTransaction: Omit<Transaction, 'id' | 'date'>) => void;
   transferFunds: (fromAccountId: string, toAccountId: string, amount: number) => void;
@@ -31,9 +31,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  const login = (email: string) => {
+  const login = (username: string) => {
     // In a real app, you'd verify credentials. Here, we just log in.
-    const userToLogin = { ...mockUser, email };
+    const userToLogin = { ...mockUser, email: `${username.toLowerCase()}@example.com` };
     localStorage.setItem('secureBankUser', JSON.stringify(userToLogin));
     setUser(userToLogin);
     router.push('/dashboard');

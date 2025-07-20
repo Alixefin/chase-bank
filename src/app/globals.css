@@ -86,6 +86,7 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  input.border-b-2 {
+    background-color: transparent !important;
+  }
 }
-
-    
