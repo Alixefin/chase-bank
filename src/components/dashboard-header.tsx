@@ -17,10 +17,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const getTitleFromPathname = (pathname: string) => {
-  if (pathname === '/dashboard') return 'Dashboard';
+  if (pathname === '/dashboard') return 'Accounts';
   if (pathname.startsWith('/dashboard/accounts')) return 'Account Details';
-  if (pathname === '/dashboard/transfer') return 'Internal Transfer';
-  if (pathname === '/dashboard/profile') return 'User Profile';
+  if (pathname.startsWith('/dashboard/transfer')) return 'Payments & Transfers';
+  if (pathname.startsWith('/dashboard/cards')) return 'Card Management';
+  if (pathname.startsWith('/dashboard/loans')) return 'Loans & Mortgages';
+  if (pathname.startsWith('/dashboard/investing')) return 'Investing';
+  if (pathname.startsWith('/dashboard/support')) return 'Support';
+  if (pathname.startsWith('/dashboard/profile')) return 'User Profile';
   return 'SecureBank';
 };
 
@@ -42,7 +46,7 @@ export function DashboardHeader() {
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">
             <Avatar>
-              <AvatarImage src={`https://placehold.co/40x40.png`} alt={user?.name} />
+              <AvatarImage src={`https://placehold.co/40x40.png`} alt={user?.name} data-ai-hint="person" />
               <AvatarFallback>{userInitial}</AvatarFallback>
             </Avatar>
             <span className="sr-only">Toggle user menu</span>

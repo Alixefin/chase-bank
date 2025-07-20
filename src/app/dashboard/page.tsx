@@ -4,7 +4,7 @@ import { useAuth } from '@/context/auth-context';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Landmark, PiggyBank, ArrowRight, ArrowRightLeft } from 'lucide-react';
+import { Landmark, PiggyBank, ArrowRight, ArrowRightLeft, CreditCard } from 'lucide-react';
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -22,6 +22,8 @@ export default function DashboardPage() {
         return <Landmark className="h-6 w-6 text-muted-foreground" />;
       case 'Savings':
         return <PiggyBank className="h-6 w-6 text-muted-foreground" />;
+      case 'Credit Card':
+          return <CreditCard className="h-6 w-6 text-muted-foreground" />;
       default:
         return null;
     }
@@ -31,10 +33,10 @@ export default function DashboardPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold">Welcome back, {user?.name?.split(' ')[0]}!</h1>
-        <p className="text-muted-foreground">Here&apos;s a summary of your accounts.</p>
+        <p className="text-muted-foreground">Here's a summary of your accounts.</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {accounts.map((account) => (
           <Card key={account.id}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -43,10 +45,10 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-4xl font-bold">{formatCurrency(account.balance)}</div>
-              <p className="text-xs text-muted-foreground">Available balance</p>
-              <Button asChild variant="ghost" className="mt-4 px-0">
+              <p className="text-xs text-muted-foreground">{account.name === 'Credit Card' ? 'Current balance' : 'Available balance'}</p>
+              <Button asChild variant="link" className="mt-4 px-0 text-primary">
                 <Link href={`/dashboard/accounts/${account.id}`}>
-                  View transactions
+                  View details
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>

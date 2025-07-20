@@ -5,7 +5,10 @@ import { usePathname } from "next/navigation";
 import {
   ArrowRightLeft,
   LayoutDashboard,
-  PiggyBank,
+  CreditCard,
+  Landmark,
+  CandlestickChart,
+  LifeBuoy,
   User as UserIcon,
 } from "lucide-react";
 
@@ -30,8 +33,12 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
 const navItems = [
-  { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/dashboard/transfer", icon: ArrowRightLeft, label: "Transfers" },
+  { href: "/dashboard", icon: LayoutDashboard, label: "Accounts" },
+  { href: "/dashboard/transfer", icon: ArrowRightLeft, label: "Payments & Transfers" },
+  { href: "/dashboard/cards", icon: CreditCard, label: "Card Management" },
+  { href: "/dashboard/loans", icon: Landmark, label: "Loans & Mortgages" },
+  { href: "/dashboard/investing", icon: CandlestickChart, label: "Investing" },
+  { href: "/dashboard/support", icon: LifeBuoy, label: "Support" },
   { href: "/dashboard/profile", icon: UserIcon, label: "Profile" },
 ];
 
@@ -78,7 +85,7 @@ export default function DashboardLayout({
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
                   asChild
-                  isActive={pathname === item.href}
+                  isActive={pathname.startsWith(item.href) && (item.href !== '/dashboard' || pathname === '/dashboard')}
                   tooltip={item.label}
                 >
                   <Link href={item.href}>
