@@ -18,8 +18,8 @@ const notifications = [
         id: 3,
         icon: Landmark,
         title: "Large Deposit Received",
-        description: "A deposit of $2,500.00 has been credited to your Checking account.",
-        time: "Yesterday",
+        description: "A deposit of $55,000.00 has been credited to your Checking account.",
+        time: "2 days ago",
         read: true
     },
 ]
