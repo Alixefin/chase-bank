@@ -39,7 +39,7 @@ export default function CardsPage() {
                             <div className="flex justify-between items-end text-sm">
                                 <div>
                                     <span className="opacity-80 block text-xs">Card Holder</span>
-                                    {user?.name}
+                                    {user?.firstName} {user?.lastName}
                                 </div>
                                 <div>
                                     <span className="opacity-80 block text-xs">Expires</span>

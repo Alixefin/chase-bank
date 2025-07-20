@@ -1,4 +1,4 @@
-// This is a new file
+
 "use client";
 
 import { useAuth } from '@/context/auth-context';
@@ -36,7 +36,7 @@ export default function WalletPage() {
                             <div className="flex justify-between items-end text-sm">
                                 <div>
                                     <span className="opacity-80 block text-xs">Card Holder</span>
-                                    {user?.name}
+                                    {user?.firstName} {user?.lastName}
                                 </div>
                                 <div>
                                     <span className="opacity-80 block text-xs">Expires</span>
@@ -60,7 +60,7 @@ export default function WalletPage() {
                             <div className="flex justify-between items-end text-sm">
                                 <div>
                                     <span className="opacity-80 block text-xs">Card Holder</span>
-                                    {user?.name}
+                                    {user?.firstName} {user?.lastName}
                                 </div>
                                 <div>
                                     <span className="opacity-80 block text-xs">Expires</span>

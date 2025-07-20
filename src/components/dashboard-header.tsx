@@ -35,7 +35,7 @@ export function DashboardHeader() {
   const pathname = usePathname();
   const title = getTitleFromPathname(pathname);
 
-  const userInitial = user?.name?.charAt(0).toUpperCase() || "U";
+  const userInitial = user?.firstName?.charAt(0).toUpperCase() || "U";
 
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-transparent px-4 md:px-6">
@@ -47,7 +47,7 @@ export function DashboardHeader() {
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">
             <Avatar>
-              <AvatarImage src={`https://placehold.co/40x40.png`} alt={user?.name} data-ai-hint="person" />
+              <AvatarImage src={`https://placehold.co/40x40.png`} alt={`${user?.firstName} ${user?.lastName}`} data-ai-hint="person" />
               <AvatarFallback>{userInitial}</AvatarFallback>
             </Avatar>
             <span className="sr-only">Toggle user menu</span>
@@ -56,7 +56,7 @@ export function DashboardHeader() {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>
             <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">{user?.name}</p>
+              <p className="text-sm font-medium leading-none">{user?.firstName} {user?.lastName}</p>
               <p className="text-xs leading-none text-muted-foreground">
                 {user?.email}
               </p>
