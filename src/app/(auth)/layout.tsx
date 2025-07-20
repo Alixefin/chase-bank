@@ -13,7 +13,7 @@ export default function AuthLayout({
       style={{ backgroundImage: "url('/img/blue-abstract-background.png')" }}
     >
       <header className="flex justify-center py-8">
-        <h1 className="text-4xl font-bold text-white tracking-widest">CHASE</h1>
+        <Logo className="h-10 w-32" />
       </header>
       <main className="flex flex-1 items-center justify-center px-4">
         {children}

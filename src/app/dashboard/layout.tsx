@@ -88,7 +88,7 @@ const MobileHeader = ({ user, logout }: { user: User | null; logout: () => void;
                 <WalletCards className="text-muted-foreground" />
             </Link>
         </div>
-        <Logo className="h-8 w-8 text-primary" />
+        <Logo className="h-8 w-20 text-primary" />
         <div className="flex items-center gap-4">
              <Link href="/dashboard/notifications">
                 <Bell className="text-muted-foreground" />
@@ -191,10 +191,7 @@ export default function DashboardLayout({
       <Sidebar side="left" variant="sidebar" collapsible="icon" className="bg-white border-r-0">
         <SidebarHeader className="p-4">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <Logo className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-gray-800 group-data-[collapsible=icon]:hidden">
-              CHASE
-            </span>
+            <Logo className="h-8 w-20" />
           </Link>
         </SidebarHeader>
         <SidebarContent>
