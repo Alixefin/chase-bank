@@ -5,12 +5,21 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChevronDown, MoreHorizontal } from 'lucide-react';
+import { ChevronDown, MoreHorizontal, ChevronRight, Briefcase, Landmark, PiggyBank, CreditCardIcon, Plus } from 'lucide-react';
 import React from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Image from 'next/image';
 import { useAuth } from '@/context/auth-context';
-import type { Account, Transaction, User } from '@/lib/data';
+import type { Account, User } from '@/lib/data';
+import { useIsMobile } from '@/hooks/use-mobile';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
 
 const cashFlowData = [
   { name: 'Jan', Income: 4000, Expenses: 2400 },
@@ -42,7 +51,12 @@ const mockTransactionsData = [
 const formatCurrency = (amount: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 
 export default function DashboardPage() {
-  const { user, accounts, transactions } = useAuth();
+  const { user, accounts } = useAuth();
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return <MobileDashboard user={user} accounts={accounts} />
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -67,12 +81,12 @@ export default function DashboardPage() {
   );
 }
 
-interface MyCardsProps {
+interface UserProps {
   user: User | null;
   accounts: Account[];
 }
 
-const MyCards = ({ user, accounts }: MyCardsProps) => {
+const MyCards = ({ user, accounts }: UserProps) => {
     const checkingAccount = accounts.find(a => a.name === 'Checking');
     const savingsAccount = accounts.find(a => a.name === 'Savings');
     const creditCardAccount = accounts.find(a => a.name === 'Credit Card');
@@ -322,4 +336,102 @@ const TransferWidget = () => (
     </Card>
 );
 
-    
+
+const MobileDashboard = ({ user, accounts }: UserProps) => {
+    const openAccountItems = [
+        { icon: CreditCardIcon, label: 'Credit cards', hint: 'credit card' },
+        { icon: Landmark, label: 'Checking', hint: 'bank' },
+        { icon: PiggyBank, label: 'Savings & CDs', hint: 'piggy bank' },
+        { icon: Briefcase, label: 'Business', hint: 'briefcase' },
+    ];
+
+    const checkingAccount = accounts.find(a => a.name === 'Checking');
+
+    return (
+        <div className="p-4 space-y-6">
+            <div className="grid grid-cols-4 gap-2 text-center text-xs">
+                <QuickActionButton icon={Plus} label="Add" />
+                <QuickActionButton label="Send | Zelle®" isText />
+                <QuickActionButton label="Deposit checks" isText />
+                <QuickActionButton label="Pay bills" isText />
+            </div>
+
+            <Card className="bg-blue-50 border-blue-200 shadow-md">
+                <CardContent className="p-4 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="bg-white p-2 rounded-full">
+                            <Image src="https://placehold.co/24x24.png" width={24} height={24} alt="snapshot icon" data-ai-hint="money cash"/>
+                        </div>
+                        <div>
+                            <p className="font-bold">Snapshot <Badge variant="secondary" className="ml-1 text-xs">30 sec read</Badge></p>
+                            <p className="text-sm text-muted-foreground">Your money in this month is $750.</p>
+                        </div>
+                    </div>
+                    <ChevronRight className="text-muted-foreground" />
+                </CardContent>
+            </Card>
+
+            <div>
+                <div className="flex justify-between items-center mb-2">
+                    <h2 className="text-lg font-bold">Accounts</h2>
+                    <MoreHorizontal className="text-muted-foreground" />
+                </div>
+                <Accordion type="single" collapsible defaultValue="item-1">
+                    <AccordionItem value="item-1" className="border-none">
+                        <Card className="shadow-sm">
+                            <AccordionTrigger className="bg-primary text-primary-foreground px-4 py-2 rounded-t-lg hover:no-underline">
+                                <span className="font-semibold">Bank accounts (1)</span>
+                            </AccordionTrigger>
+                            <AccordionContent className="p-4 bg-card rounded-b-lg">
+                                {checkingAccount && (
+                                    <Link href={`/dashboard/accounts/${checkingAccount.id}`} className="block">
+                                        <div className="flex justify-between items-center text-sm font-semibold text-primary mb-2">
+                                            <span>CHASE SECURE BANKING ...9403)</span>
+                                            <ChevronRight />
+                                        </div>
+                                        <p className="text-3xl font-bold tracking-tight">{formatCurrency(checkingAccount.balance)}</p>
+                                        <p className="text-sm text-muted-foreground">Available balance</p>
+                                    </Link>
+                                )}
+                                <div className="border-t my-4"></div>
+                                <Link href="#" className="flex justify-between items-center text-primary font-semibold">
+                                    <span>Link external accounts</span>
+                                    <ChevronRight />
+                                </Link>
+                            </AccordionContent>
+                        </Card>
+                    </AccordionItem>
+                </Accordion>
+            </div>
+
+            <div>
+                <h2 className="text-lg font-bold mb-2">Open an account</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    {openAccountItems.map(item => (
+                        <Card key={item.label} className="p-4 flex flex-col items-center justify-center text-center space-y-2">
+                            <item.icon className="w-8 h-8 text-primary" />
+                            <span className="text-sm font-semibold">{item.label}</span>
+                        </Card>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const QuickActionButton = ({ icon: Icon, label, isText = false }: { icon?: React.ElementType, label: string, isText?: boolean }) => {
+    if (isText) {
+        return (
+            <Button variant="ghost" className="bg-gray-100 rounded-full h-auto py-2 px-3 text-primary font-semibold text-xs shadow-sm">
+                {label}
+            </Button>
+        )
+    }
+    return (
+        <div className="flex flex-col items-center space-y-1">
+            <Button variant="ghost" size="icon" className="bg-gray-100 rounded-full w-12 h-12 shadow-sm">
+                {Icon && <Icon className="w-6 h-6 text-primary" />}
+            </Button>
+        </div>
+    )
+}

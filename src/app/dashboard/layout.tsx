@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import Link from "next/link";
@@ -7,15 +8,21 @@ import {
   ArrowRightLeft,
   LayoutDashboard,
   CreditCard,
-  Landmark,
   CandlestickChart,
-  LifeBuoy,
   User as UserIcon,
   Bell,
   Wallet,
   FileText,
   PiggyBank,
-  ChevronDown
+  ChevronDown,
+  MessageCircle,
+  WalletCards,
+  CircleUserRound,
+  Home,
+  Star,
+  MoreHorizontal,
+  Plus,
+  BarChart2
 } from "lucide-react";
 
 import { useAuth } from "@/context/auth-context";
@@ -39,6 +46,7 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -49,6 +57,50 @@ const navItems = [
   { href: "/dashboard/notifications", icon: Bell, label: "Notifications" },
 ];
 
+const mobileNavItems = [
+    { href: "/dashboard", icon: Home, label: "Accounts" },
+    { href: "/dashboard/transfer", icon: ArrowRightLeft, label: "Pay & transfer" },
+    { href: "/dashboard/investing", icon: BarChart2, label: "Plan & track" },
+    { href: "/dashboard/rewards", icon: Star, label: "Offers" },
+    { href: "#", icon: MoreHorizontal, label: "More" },
+];
+
+const MobileHeader = () => (
+    <header className="sticky top-0 z-10 flex h-14 items-center justify-between bg-background px-4">
+        <div className="flex items-center gap-4">
+            <MessageCircle className="text-muted-foreground" />
+            <WalletCards className="text-muted-foreground" />
+        </div>
+        <Logo className="h-8 w-8 text-primary" />
+        <div className="flex items-center gap-4">
+            <Bell className="text-muted-foreground" />
+            <Link href="/dashboard/profile">
+                <CircleUserRound className="text-muted-foreground" />
+            </Link>
+        </div>
+    </header>
+);
+
+const MobileFooter = () => {
+    const pathname = usePathname();
+    return (
+        <footer className="sticky bottom-0 z-10 border-t bg-background">
+            <nav className="flex justify-around items-center h-16">
+                {mobileNavItems.map((item) => (
+                    <Link key={item.label} href={item.href} className={cn(
+                        "flex flex-col items-center justify-center gap-1 text-xs font-medium w-full h-full",
+                        pathname === item.href ? "text-primary" : "text-muted-foreground"
+                    )}>
+                        <item.icon className="h-6 w-6" />
+                        <span>{item.label}</span>
+                    </Link>
+                ))}
+            </nav>
+        </footer>
+    );
+};
+
+
 export default function DashboardLayout({
   children,
 }: {
@@ -57,6 +109,7 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const { user } = useAuth();
   const router = useRouter();
+  const isMobile = useIsMobile();
   const userInitial = user?.name?.charAt(0).toUpperCase() || "U";
 
   useEffect(() => {
@@ -72,6 +125,18 @@ export default function DashboardLayout({
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
       </div>
     );
+  }
+
+  if (isMobile) {
+      return (
+        <div className="flex flex-col min-h-screen bg-background">
+            <MobileHeader />
+            <main className="flex-1 overflow-y-auto pb-16">
+                {children}
+            </main>
+            <MobileFooter />
+        </div>
+      );
   }
 
   return (
