@@ -103,11 +103,11 @@ const MobileHeader = ({ user, logout }: { user: User | null; logout: () => void;
                      <DropdownMenuItem asChild>
                          <Link href="/dashboard/profile">
                             <UserIcon className="mr-2 h-4 w-4" />
-                            <span>{user?.name}</span>
+                            <span>{user?.firstName} {user?.lastName}</span>
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                         <Link href="/dashboard/profile">
+                         <Link href="/dashboard/settings">
                             <Settings className="mr-2 h-4 w-4" />
                             <span>Settings</span>
                         </Link>
@@ -153,7 +153,7 @@ export default function DashboardLayout({
   const { user, logout } = useAuth();
   const router = useRouter();
   const isMobile = useIsMobile();
-  const userInitial = user?.name?.charAt(0).toUpperCase() || "U";
+  const userInitial = user?.firstName?.charAt(0).toUpperCase() || "U";
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem('secureBankUser');
@@ -229,11 +229,11 @@ export default function DashboardLayout({
                 <DropdownMenuTrigger asChild>
                     <div className="flex items-center gap-3 cursor-pointer">
                         <Avatar className="h-10 w-10">
-                            <AvatarImage src={`https://placehold.co/40x40.png`} alt={user.name} data-ai-hint="person" />
+                            <AvatarImage src={`https://placehold.co/40x40.png`} alt={`${user.firstName} ${user.lastName}`} data-ai-hint="person" />
                             <AvatarFallback>{userInitial}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1 group-data-[collapsible=icon]:hidden">
-                            <p className="text-sm font-semibold">{user.name}</p>
+                            <p className="text-sm font-semibold">{user.firstName} {user.lastName}</p>
                             <p className="text-xs text-muted-foreground">Los Angeles, CA</p>
                         </div>
                         <ChevronDown className="h-5 w-5 text-muted-foreground group-data-[collapsible=icon]:hidden" />
@@ -243,9 +243,16 @@ export default function DashboardLayout({
                     <DropdownMenuItem asChild>
                          <Link href="/dashboard/profile">
                             <UserIcon className="mr-2 h-4 w-4" />
-                            <span>Profile & Settings</span>
+                            <span>Profile</span>
                         </Link>
                     </DropdownMenuItem>
+                     <DropdownMenuItem asChild>
+                        <Link href="/dashboard/settings">
+                            <Settings className="mr-2 h-4 w-4" />
+                            <span>Settings</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
                      <DropdownMenuItem asChild>
                         <Link href="/dashboard/notifications">
                             <Bell className="mr-2 h-4 w-4" />
