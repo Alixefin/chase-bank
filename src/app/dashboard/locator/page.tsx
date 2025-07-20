@@ -11,7 +11,7 @@ export default function LocatorPage() {
         <CardHeader>
           <CardTitle>Branch & ATM Locator</CardTitle>
           <CardDescription>
-            Find nearby SecureBank branches and ATMs.
+            Find nearby Chase Bank branches and ATMs.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center min-h-[300px] text-center">

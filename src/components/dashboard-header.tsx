@@ -27,7 +27,7 @@ const getTitleFromPathname = (pathname: string) => {
   if (pathname.startsWith('/dashboard/rewards')) return 'Rewards & Deals';
   if (pathname.startsWith('/dashboard/notifications')) return 'Notifications';
   if (pathname.startsWith('/dashboard/profile')) return 'User Profile';
-  return 'SecureBank';
+  return 'Chase Bank';
 };
 
 

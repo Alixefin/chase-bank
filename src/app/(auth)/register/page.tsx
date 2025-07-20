@@ -43,7 +43,7 @@ export default function RegisterPage() {
     login(values.email);
     toast({
       title: "Registration Successful",
-      description: "Your SecureBank account has been created.",
+      description: "Your Chase Bank account has been created.",
     });
   }
 
@@ -52,7 +52,7 @@ export default function RegisterPage() {
       <CardHeader>
         <CardTitle className="text-2xl">Sign Up</CardTitle>
         <CardDescription>
-          Create your SecureBank account.
+          Create your Chase Bank account.
         </CardDescription>
       </CardHeader>
       <CardContent>

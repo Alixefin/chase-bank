@@ -202,7 +202,7 @@ export default function TransferPage() {
       <CardContent className="space-y-8">
         <div>
             <h2 className="text-lg font-semibold mb-2">Internal Transfer</h2>
-            <p className="text-sm text-muted-foreground mb-4">Move money between your SecureBank accounts.</p>
+            <p className="text-sm text-muted-foreground mb-4">Move money between your Chase Bank accounts.</p>
             <InternalTransferForm />
         </div>
         

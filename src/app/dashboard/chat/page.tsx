@@ -15,7 +15,7 @@ type Message = {
 
 export default function ChatPage() {
     const [messages, setMessages] = useState<Message[]>([
-        { sender: 'bot', text: 'Hello! I am your SecureBank AI assistant. How can I help you today?' }
+        { sender: 'bot', text: 'Hello! I am your Chase Bank AI assistant. How can I help you today?' }
     ]);
     const [input, setInput] = useState('');
 
