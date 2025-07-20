@@ -1,8 +1,7 @@
-// This is a new file
+
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import Link from 'next/link';
 import { ChevronRight, FileText, LifeBuoy, MapPin, Shield } from "lucide-react";
 

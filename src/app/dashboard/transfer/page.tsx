@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -30,8 +31,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ArrowRightLeft, Landmark, Send, FileText } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -40,58 +40,47 @@ const formatCurrency = (amount: number) => {
   }).format(amount);
 };
 
+const FormSchema = z.object({
+    fromAccountId: z.string({ required_error: "Please select an account to transfer from." }),
+    toAccountId: z.string({ required_error: "Please select an account to transfer to." }),
+    amount: z.coerce.number().positive({ message: "Amount must be positive." }),
+}).refine(data => data.fromAccountId !== data.toAccountId, {
+    message: "Cannot transfer to the same account.",
+    path: ["toAccountId"],
+});
 
 const InternalTransferForm = () => {
-    const { accounts, transferFunds } = useAuth();
-    const { toast } = useToast();
-    const router = useRouter();
-    const [isConfirming, setIsConfirming] = useState(false);
-    
-    const FormSchema = z.object({
-        fromAccountId: z.string({ required_error: "Please select an account to transfer from." }),
-        toAccountId: z.string({ required_error: "Please select an account to transfer to." }),
-        amount: z.coerce.number().positive({ message: "Amount must be positive." }),
-    }).refine(data => data.fromAccountId !== data.toAccountId, {
-        message: "Cannot transfer to the same account.",
-        path: ["toAccountId"],
-    }).refine(data => {
-        const fromAccount = accounts.find(acc => acc.id === data.fromAccountId);
-        return fromAccount ? data.amount <= fromAccount.balance : false;
-    }, {
-        message: "Insufficient funds for this transfer.",
-        path: ["amount"],
-    });
+    const { accounts } = useAuth();
+    const [showAlert, setShowAlert] = useState(false);
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-          fromAccountId: "",
-          toAccountId: "",
-          amount: 0,
+            fromAccountId: "",
+            toAccountId: "",
+            amount: 0,
         },
     });
-
-    function handleTransferConfirm() {
-        const values = form.getValues();
-        transferFunds(values.fromAccountId, values.toAccountId, values.amount);
-        toast({
-        title: "Transfer Successful",
-        description: `${formatCurrency(values.amount)} has been transferred.`,
-        });
-        setIsConfirming(false);
-        form.reset();
-        router.push('/dashboard');
-    }
     
     function onSubmit() {
-        setIsConfirming(true);
+        setShowAlert(true);
     }
 
-    const values = form.watch();
-    const fromAccount = accounts.find(acc => acc.id === values.fromAccountId);
-    const toAccount = accounts.find(acc => acc.id === values.toAccountId);
-
     return (
+        <>
+        <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                <AlertDialogTitle>Account Suspended</AlertDialogTitle>
+                <AlertDialogDescription>
+                    Your account is currently suspended. This action cannot be completed. Please contact support for assistance.
+                </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                <AlertDialogAction onClick={() => setShowAlert(false)}>OK</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
@@ -156,7 +145,7 @@ const InternalTransferForm = () => {
                           placeholder="0.00"
                           className="pl-7"
                           {...field}
-                          onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                          onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
                         />
                     </div>
                   </FormControl>
@@ -165,51 +154,41 @@ const InternalTransferForm = () => {
               )}
             />
             
-            <AlertDialog open={isConfirming} onOpenChange={setIsConfirming}>
-                <AlertDialogTrigger asChild>
-                    <Button type="submit" className="w-full" disabled={!form.formState.isValid}>
-                        Review Transfer
-                    </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                    <AlertDialogTitle>Confirm Your Transfer</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        Please review the details below before confirming. This action cannot be undone.
-                    </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
-                            <span className="text-muted-foreground">From:</span>
-                            <span>{fromAccount?.name}</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="text-muted-foreground">To:</span>
-                            <span>{toAccount?.name}</span>
-                        </div>
-                        <div className="flex justify-between font-bold text-lg">
-                            <span className="text-muted-foreground">Amount:</span>
-                            <span>{formatCurrency(values.amount || 0)}</span>
-                        </div>
-                    </div>
-                    <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleTransferConfirm}>Confirm Transfer</AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <Button type="submit" className="w-full">
+                Review Transfer
+            </Button>
           </form>
         </Form>
+        </>
     )
 }
 
-const PlaceholderForm = ({ title, description }: {title: string, description: string}) => (
-    <div className="text-center py-12">
-        <h3 className="text-xl font-semibold">{title}</h3>
-        <p className="text-muted-foreground mt-2">{description}</p>
-        <Button className="mt-6">Get Started</Button>
-    </div>
-)
+const SuspendedService = ({ title, description, buttonText }: {title: string, description: string, buttonText: string}) => {
+    const [showAlert, setShowAlert] = useState(false);
+    
+    return (
+        <>
+        <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                <AlertDialogTitle>Account Suspended</AlertDialogTitle>
+                <AlertDialogDescription>
+                    Your account is currently suspended. This service cannot be accessed. Please contact support for assistance.
+                </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                <AlertDialogAction onClick={() => setShowAlert(false)}>OK</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+        <div className="text-center py-8">
+            <h3 className="text-xl font-semibold">{title}</h3>
+            <p className="text-muted-foreground mt-2 max-w-md mx-auto">{description}</p>
+            <Button className="mt-6" onClick={() => setShowAlert(true)}>{buttonText}</Button>
+        </div>
+        </>
+    )
+}
 
 
 export default function TransferPage() {
@@ -220,27 +199,29 @@ export default function TransferPage() {
         <CardTitle>Pay & Transfer</CardTitle>
         <CardDescription>Move money, pay bills, and send funds to others.</CardDescription>
       </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="internal">
-            <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="internal"><ArrowRightLeft className="w-4 h-4 mr-2 sm:hidden"/>Internal Transfer</TabsTrigger>
-                <TabsTrigger value="external"><Landmark className="w-4 h-4 mr-2 sm:hidden"/>External Transfer</TabsTrigger>
-                <TabsTrigger value="zelle"><Send className="w-4 h-4 mr-2 sm:hidden"/>Send with Zelle®</TabsTrigger>
-                <TabsTrigger value="bill-pay"><FileText className="w-4 h-4 mr-2 sm:hidden"/>Pay Bills</TabsTrigger>
-            </TabsList>
-            <TabsContent value="internal" className="pt-6">
-                <InternalTransferForm />
-            </TabsContent>
-            <TabsContent value="external">
-                <PlaceholderForm title="External Account Transfers" description="Securely send money to your accounts at other banks." />
-            </TabsContent>
-             <TabsContent value="zelle">
-                <PlaceholderForm title="Send Money with Zelle®" description="A fast, safe and easy way to send money to friends and family." />
-            </TabsContent>
-            <TabsContent value="bill-pay">
-                <PlaceholderForm title="Bill Pay" description="Manage and pay all your bills from one place." />
-            </TabsContent>
-        </Tabs>
+      <CardContent className="space-y-8">
+        <div>
+            <h2 className="text-lg font-semibold mb-2">Internal Transfer</h2>
+            <p className="text-sm text-muted-foreground mb-4">Move money between your SecureBank accounts.</p>
+            <InternalTransferForm />
+        </div>
+        
+        <Separator />
+        
+        <SuspendedService 
+            title="Send Money with Zelle®"
+            description="A fast, safe and easy way to send money to friends and family using just their U.S. mobile number or email address."
+            buttonText="Send Money"
+        />
+
+        <Separator />
+        
+        <SuspendedService 
+            title="Pay Bills"
+            description="Manage and pay all your bills from one place. Set up one-time or recurring payments."
+            buttonText="Go to Bill Pay"
+        />
+
       </CardContent>
     </Card>
   );

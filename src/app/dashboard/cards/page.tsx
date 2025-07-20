@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useAuth } from '@/context/auth-context';
@@ -10,18 +11,7 @@ const formatCurrency = (amount: number) => new Intl.NumberFormat('en-US', { styl
 
 export default function CardsPage() {
   const { user, accounts } = useAuth();
-  const creditCardAccount = accounts.find(a => a.name === 'Credit Card');
-
-  if (!creditCardAccount) {
-    return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Credit Cards</CardTitle>
-                <CardDescription>No credit card account found.</CardDescription>
-            </CardHeader>
-        </Card>
-    );
-  }
+  const checkingAccount = accounts.find(a => a.name === 'Checking');
 
   return (
     <div className="space-y-8">
@@ -34,29 +24,31 @@ export default function CardsPage() {
         </CardHeader>
         <CardContent>
             <div className="max-w-md mx-auto">
-                <div className="relative aspect-[1.58] bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl p-6 text-white flex flex-col justify-between shadow-lg">
-                    <div>
-                        <div className="flex justify-between items-start">
-                            <span className="font-bold text-xl">SecureBank</span>
-                            <Image src="/img/visa-logo.png" alt="Visa Logo" width={60} height={30} data-ai-hint="logo" />
-                        </div>
-                        <p className="text-sm opacity-80 mt-4">Balance</p>
-                        <p className="text-3xl font-bold">{formatCurrency(creditCardAccount.balance)}</p>
-                    </div>
-                    <div className="space-y-1">
-                        <p className="font-mono text-xl tracking-widest text-center">···· ···· ···· 1544</p>
-                        <div className="flex justify-between items-end text-sm">
-                            <div>
-                                <span className="opacity-80 block text-xs">Card Holder</span>
-                                {user?.name}
+                {checkingAccount && (
+                    <div className="relative aspect-[1.58] bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl p-6 text-white flex flex-col justify-between shadow-lg">
+                        <div>
+                            <div className="flex justify-between items-start">
+                                <span className="font-bold text-xl">SecureBank</span>
+                                <Image src="/img/visa-logo.png" alt="Visa Logo" width={60} height={30} data-ai-hint="logo" />
                             </div>
-                            <div>
-                                <span className="opacity-80 block text-xs">Expires</span>
-                                12/26
+                            <p className="text-sm opacity-80 mt-4">Balance</p>
+                            <p className="text-3xl font-bold">{formatCurrency(checkingAccount.balance)}</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="font-mono text-xl tracking-widest text-center">···· ···· ···· 4562</p>
+                            <div className="flex justify-between items-end text-sm">
+                                <div>
+                                    <span className="opacity-80 block text-xs">Card Holder</span>
+                                    {user?.name}
+                                </div>
+                                <div>
+                                    <span className="opacity-80 block text-xs">Expires</span>
+                                    03/26
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </CardContent>
       </Card>
