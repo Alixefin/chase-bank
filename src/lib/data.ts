@@ -22,14 +22,14 @@ export type Transaction = {
 
 export const mockUser: User = {
   id: '1',
-  name: 'John Doe',
-  email: 'john.doe@example.com',
+  name: 'David Jevaun Jones',
+  email: 'davidjones09020@gmail.com',
 };
 
 export let mockAccounts: Account[] = [
-  { id: 'acc-1', userId: '1', name: 'Checking', balance: 5420.50 },
-  { id: 'acc-2', userId: '1', name: 'Savings', balance: 12850.75 },
-  { id: 'acc-3', userId: '1', name: 'Credit Card', balance: -1234.56 },
+  { id: 'acc-1', userId: '1', name: 'Checking', balance: 5800000 },
+  { id: 'acc-2', userId: '1', name: 'Savings', balance: 10000000 },
+  { id: 'acc-3', userId: '1', name: 'Credit Card', balance: -2500.88 },
 ];
 
 export const mockTransactions: Transaction[] = [
