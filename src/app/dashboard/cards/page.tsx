@@ -29,7 +29,7 @@ export default function CardsPage() {
                         <div>
                             <div className="flex justify-between items-start">
                                 <span className="font-bold text-xl">SecureBank</span>
-                                <Image src="/img/visa-logo.png" alt="Visa Logo" width={60} height={30} data-ai-hint="logo" />
+                                <Image src="https://placehold.co/60x30.png" alt="Visa Logo" width={60} height={30} data-ai-hint="visa logo" />
                             </div>
                             <p className="text-sm opacity-80 mt-4">Balance</p>
                             <p className="text-3xl font-bold">{formatCurrency(checkingAccount.balance)}</p>

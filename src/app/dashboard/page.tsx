@@ -50,11 +50,11 @@ const expensesData = [
 ];
 
 const mockTransactionsData = [
-    { logo: '/img/spotify.png', company: 'Spotify', category: 'Entertainment', amount: -12.99, date: '2025-06-25', dataAiHint: 'logo music' },
-    { logo: '/img/chickfila.png', company: 'Chick-Fil-A', category: 'Dining', amount: -27.32, date: '2025-06-25', dataAiHint: 'logo food' },
-    { logo: '/img/disney.png', company: 'Disney+', category: 'Streaming Service', amount: -7.99, date: '2025-06-24', dataAiHint: 'logo movie' },
-    { logo: '/img/chevron.png', company: 'Chevron', category: 'Gas', amount: -53.70, date: '2025-06-23', dataAiHint: 'logo gas' },
-    { logo: '/img/nike.png', company: 'Nike', category: 'Apparel', amount: -235.17, date: '2025-06-23', dataAiHint: 'logo shoe' },
+    { logo: 'https://placehold.co/40x40.png', company: 'Spotify', category: 'Entertainment', amount: -12.99, date: '2025-06-25', dataAiHint: 'spotify logo' },
+    { logo: 'https://placehold.co/40x40.png', company: 'Chick-Fil-A', category: 'Dining', amount: -27.32, date: '2025-06-25', dataAiHint: 'chickfila logo' },
+    { logo: 'https://placehold.co/40x40.png', company: 'Disney+', category: 'Streaming Service', amount: -7.99, date: '2025-06-24', dataAiHint: 'disney logo' },
+    { logo: 'https://placehold.co/40x40.png', company: 'Chevron', category: 'Gas', amount: -53.70, date: '2025-06-23', dataAiHint: 'chevron logo' },
+    { logo: 'https://placehold.co/40x40.png', company: 'Nike', category: 'Apparel', amount: -235.17, date: '2025-06-23', dataAiHint: 'nike logo' },
 ];
 
 const formatCurrency = (amount: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
@@ -110,11 +110,12 @@ const MyCards = ({ user, accounts }: { user: User | null, accounts: Account[] })
                         <div className="p-1">
                            <div className="relative aspect-[1.58] bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl p-6 text-white flex flex-col justify-between">
                                 <div className="flex justify-between items-start">
-                                    <div>
-                                        <span className="text-sm opacity-80">Balance</span>
-                                        <p className="text-2xl font-bold">{formatCurrency(5000)}</p>
-                                    </div>
                                     <span className="font-bold text-lg">Credit</span>
+                                    <Image src="https://placehold.co/40x20.png" alt="Visa Logo" width={40} height={20} data-ai-hint="visa logo" />
+                                </div>
+                                <div>
+                                    <span className="text-sm opacity-80">Balance</span>
+                                    <p className="text-2xl font-bold">{formatCurrency(5000)}</p>
                                 </div>
                                 <div className="space-y-1">
                                     <p className="font-mono text-lg tracking-widest">···· ···· ···· 4562</p>
@@ -127,7 +128,6 @@ const MyCards = ({ user, accounts }: { user: User | null, accounts: Account[] })
                                             <span className="opacity-80 block text-xs">Expires</span>
                                             03/26
                                         </div>
-                                        <Image src="/img/visa-logo.png" alt="Visa Logo" width={40} height={20} data-ai-hint="logo" />
                                     </div>
                                 </div>
                             </div>
@@ -221,7 +221,7 @@ const RecentTransactions = ({ transactions }: RecentTransactionsProps) => (
                 {transactions.slice(0, 5).map(t => (
                     <div key={t.id} className="flex items-center space-x-4">
                         <Avatar className="h-10 w-10 rounded-lg">
-                           <AvatarImage src={`https://placehold.co/40x40/png`} data-ai-hint={t.description.split(' ')[0]} />
+                           <AvatarImage src={`https://placehold.co/40x40.png`} data-ai-hint={t.description.split(' ')[0].toLowerCase() + " logo"} />
                            <AvatarFallback>{t.description.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
@@ -389,7 +389,7 @@ const MobileDashboard = ({ user, accounts, transactions }: DashboardProps) => {
                         {recentTransactions.map(t => (
                             <div key={t.id} className="flex items-center space-x-4">
                                 <Avatar className="h-10 w-10 rounded-lg">
-                                   <AvatarImage src={`https://placehold.co/40x40/png`} data-ai-hint={t.description.split(' ')[0]} />
+                                   <AvatarImage src={`https://placehold.co/40x40.png`} data-ai-hint={t.description.split(' ')[0].toLowerCase() + " logo"} />
                                    <AvatarFallback>{t.description.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1">
@@ -454,6 +454,3 @@ const QuickActionButton = ({ icon: Icon, label, isText = false, href, onClick }:
         </Link>
     )
 }
-
-
-    
