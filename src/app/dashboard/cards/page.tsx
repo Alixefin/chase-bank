@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { CreditCard, MoreVertical, ShieldCheck, Zap } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import { VisaLogo } from '@/components/visa-logo';
 
 const formatCurrency = (amount: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 
@@ -29,7 +30,7 @@ export default function CardsPage() {
                         <div>
                             <div className="flex justify-between items-start">
                                 <span className="font-bold text-xl">SecureBank</span>
-                                <Image src="/img/visa-logo.png" alt="Visa Logo" width={60} height={30} />
+                                <VisaLogo className="h-8 w-auto text-white" />
                             </div>
                             <p className="text-sm opacity-80 mt-4">Balance</p>
                             <p className="text-3xl font-bold">{formatCurrency(checkingAccount.balance)}</p>

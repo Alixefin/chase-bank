@@ -32,6 +32,7 @@ import {
     AlertDialogTitle,
   } from "@/components/ui/alert-dialog";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { VisaLogo } from '@/components/visa-logo';
 
 
 const cashFlowData = [
@@ -51,11 +52,11 @@ const expensesData = [
 ];
 
 const mockTransactionsData = [
-    { logo: 'https://placehold.co/40x40.png', company: 'Spotify', category: 'Entertainment', amount: -12.99, date: '2025-06-25', dataAiHint: 'spotify logo' },
-    { logo: 'https://placehold.co/40x40.png', company: 'Chick-Fil-A', category: 'Dining', amount: -27.32, date: '2025-06-25', dataAiHint: 'chickfila logo' },
-    { logo: 'https://placehold.co/40x40.png', company: 'Disney+', category: 'Streaming Service', amount: -7.99, date: '2025-06-24', dataAiHint: 'disney logo' },
-    { logo: 'https://placehold.co/40x40.png', company: 'Chevron', category: 'Gas', amount: -53.70, date: '2025-06-23', dataAiHint: 'chevron logo' },
-    { logo: 'https://placehold.co/40x40.png', company: 'Nike', category: 'Apparel', amount: -235.17, date: '2025-06-23', dataAiHint: 'nike logo' },
+    { logo: '/img/spotify-logo.png', company: 'Spotify', category: 'Entertainment', amount: -12.99, date: '2025-06-25' },
+    { logo: '/img/chickfila-logo.png', company: 'Chick-Fil-A', category: 'Dining', amount: -27.32, date: '2025-06-25' },
+    { logo: '/img/disney-logo.png', company: 'Disney+', category: 'Streaming Service', amount: -7.99, date: '2025-06-24' },
+    { logo: '/img/chevron-logo.png', company: 'Chevron', category: 'Gas', amount: -53.70, date: '2025-06-23' },
+    { logo: '/img/nike-logo.png', company: 'Nike', category: 'Apparel', amount: -235.17, date: '2025-06-23' },
 ];
 
 const formatCurrency = (amount: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
@@ -98,7 +99,6 @@ interface DashboardProps {
 }
 
 const MyCards = ({ user, accounts }: { user: User | null, accounts: Account[] }) => {
-    const creditCardAccount = accounts.find(a => a.name === 'Credit Card');
     return (
     <Card className="bg-card">
         <CardHeader className="flex flex-row items-center justify-between">
@@ -113,7 +113,7 @@ const MyCards = ({ user, accounts }: { user: User | null, accounts: Account[] })
                            <div className="relative aspect-[1.58] bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl p-6 text-white flex flex-col justify-between">
                                 <div className="flex justify-between items-start">
                                     <span className="font-bold text-lg">Credit</span>
-                                    <Image src="/img/visa-logo.png" alt="Visa Logo" width={40} height={20} />
+                                    <VisaLogo className="h-6 w-auto text-white" />
                                 </div>
                                 <div>
                                     <span className="text-sm opacity-80">Balance</span>
@@ -391,7 +391,7 @@ const MobileDashboard = ({ user, accounts, transactions }: DashboardProps) => {
                         {recentTransactions.map(t => (
                             <div key={t.id} className="flex items-center space-x-4">
                                 <Avatar className="h-10 w-10 rounded-lg">
-                                   <AvatarImage src={`/img/${t.description.split(' ')[0].toLowerCase()}-logo.png`} />
+                                   <Image src={`/img/${t.description.split(' ')[0].toLowerCase()}-logo.png`} alt={`${t.description} logo`} width={40} height={40} />
                                    <AvatarFallback>{t.description.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1">
